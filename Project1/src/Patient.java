@@ -28,6 +28,7 @@ public class Patient implements Comparable<Patient> {
 
         while(VisitRunner != null){
             FinialCharge += VisitRunner.getCurrentAppointment().getProvider().getSpecialty().getCharge();
+            VisitRunner = VisitRunner.getNextFinishedVisit();
         }
 
         return FinialCharge;
@@ -58,8 +59,8 @@ public class Patient implements Comparable<Patient> {
 
     @Override public String toString(){
         String result = "";
-        result += profile.toString() + " ";
-        result += Integer.toString(charge());
+        result += profile.getFirstName() + " " + profile.getLastName() + " " + profile.getBirthDay().toString() + " ";
+        result += "[Amount due: $" + Float.toString(charge()) + "]";
         return result;
     }
 }

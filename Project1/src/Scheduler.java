@@ -238,14 +238,17 @@ public class Scheduler {
             return;
         }
 
-        /*
+        System.out.println("** Billing statement **");
         for(int i = 0; i < PatientList.length; i += 1){
             if(PatientList[i] == null){
                 continue;
             }
-            System.out.println(PatientList[i].getProfile().toString());
+            
+            System.out.println("(" +Integer.toString(i) +  ") " + PatientList[i].toString());
+            
         }
-        */
+        System.out.println("** End of List **");
+        /**/
         AppointmentList.cleanList();
 
     }

@@ -18,7 +18,7 @@ public class MedicalRecord {
         if(TargetIndex == -1){
             generateNewPatient(appointment);
         }else{
-            //patients[TargetIndex].addFinishedAppointment(appointment);
+            patients[TargetIndex].addFinishedAppointment(appointment);
         }
 
     }
