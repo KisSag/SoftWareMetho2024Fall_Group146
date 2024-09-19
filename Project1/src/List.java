@@ -149,17 +149,16 @@ public class List {
         size = 0;
     }
 
-    public void printByPatient(){//ordered by patient profile, date/timeslot 
+    public Appointment[] printByPatient(){//ordered by patient profile, date/timeslot 
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
         if(arrTemp.length == 0){
-            System.out.println("Schedule Canlendat is empty");
-            return;
+            return null;
         }
-        printByPatient_helper_bubbleSort(arrTemp, arrTemp.length);
+        return printByPatient_helper_bubbleSort(arrTemp, arrTemp.length);
     
     }
     //bubble sort, if there's better one?
-    void printByPatient_helper_bubbleSort(Appointment arr[], int n)
+    Appointment[] printByPatient_helper_bubbleSort(Appointment arr[], int n)
     {
         Appointment temp;
         boolean swapped;
@@ -188,18 +187,16 @@ public class List {
                 break;
             }
         }
-        outputSortedResult(arr); //output the result
+        return arr;
     }
-
-    public void printByLocation(){//ordered by county, date/timeslot
+    public Appointment[] printByLocation(){//ordered by county, date/timeslot
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
         if(arrTemp.length == 0){
-            System.out.println("Schedule Canlendat is empty");
-            return;
+            return null;
         }
-        printByLocation_helper_bubbleSort(arrTemp, arrTemp.length);
+        return printByLocation_helper_bubbleSort(arrTemp, arrTemp.length);
     } 
-    void printByLocation_helper_bubbleSort(Appointment arr[], int n){
+    Appointment[] printByLocation_helper_bubbleSort(Appointment arr[], int n){
         Appointment temp;
         boolean swapped;
 
@@ -227,19 +224,18 @@ public class List {
                 break;
             }
         }
-        outputSortedResult(arr); //output the result
+        return arr;
     }
 
-    public void printByAppointment(){
+    public Appointment[] printByAppointment(){
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
         if(arrTemp.length == 0){
-            System.out.println("Schedule Canlendat is empty");
-            return;
+            return null;
         }
-        printByAppointment_helper_bubbleSort(arrTemp, arrTemp.length);
+        return printByAppointment_helper_bubbleSort(arrTemp, arrTemp.length);
 
     }
-    void printByAppointment_helper_bubbleSort(Appointment arr[], int n){
+    Appointment[] printByAppointment_helper_bubbleSort(Appointment arr[], int n){
         Appointment temp;
         boolean swapped;
 
@@ -267,18 +263,9 @@ public class List {
                 break;
             }
         }
-        outputSortedResult(arr); //output the result
-    }
 
-    private void outputSortedResult(Appointment[] AppontArr){
-        for(int i = 0; i < AppontArr.length; i += 1){
-            if(AppontArr[i] == null){
-                return;
-            }
-            System.out.println(AppontArr[i].toString() + "");
-        }
+        return arr;
     }
-
     private Appointment[] generateCleanAppointmentArray(Appointment[] oldArr){//this method will return a new appointmentArray with no empty plot
         Appointment[] arrTemp = new Appointment[size];
         int index_Temp = 0;

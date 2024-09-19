@@ -63,13 +63,13 @@ public class Scheduler {
                 rescheduleAppointment(CommandList);
                 break;
             case "PA":
-                AppointmentList.printByAppointment();
+                outputSortedResult(AppointmentList.printByAppointment());
                 break;
             case "PP":
-                AppointmentList.printByPatient();
+                outputSortedResult(AppointmentList.printByPatient());
                 break;
             case "PL":
-                AppointmentList.printByLocation();
+                outputSortedResult(AppointmentList.printByLocation());
                 break;
             case "PS":
                 calculateBill();
@@ -329,5 +329,18 @@ public class Scheduler {
         //String DateString =  new SimpleDateFormat("MM/dd/YYYY").format(calndr.getTime());
         //return generateDate_FromString(DateString.split("/")[0], DateString.split("/")[1], DateString.split("/")[2]);
         return new Date(calndr.get(Calendar.MONTH), calndr.get(Calendar.DAY_OF_MONTH), calndr.get(Calendar.YEAR));
+    }
+
+    void outputSortedResult(Appointment[] AppontArr_Clean){
+        if(AppontArr_Clean == null || AppontArr_Clean.length == 0){
+            System.out.println("Schedule Canlendat is empty");
+            return;
+        }
+        for(int i = 0; i < AppontArr_Clean.length; i += 1){
+            if(AppontArr_Clean[i] == null){
+                return;
+            }
+            System.out.println(AppontArr_Clean[i].toString() + "");
+        }
     }
 }
