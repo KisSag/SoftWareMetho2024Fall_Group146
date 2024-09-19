@@ -1,6 +1,7 @@
 import java.util.Scanner;
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Scheduler {
 
@@ -23,7 +24,6 @@ public class Scheduler {
     public void run(){
         Scanner CommandScanner = new Scanner(System.in);
         System.out.println("Scheduler is running.");
-
         while(ProgrammeRunner){
             readCommand(CommandScanner.nextLine());
         }
@@ -81,11 +81,6 @@ public class Scheduler {
         }
     }
 
-
-
-    
-
-
     boolean addAppointmentToList(Appointment appointment){
 
         if(checkAppointmentValid(appointment)){
@@ -131,9 +126,10 @@ public class Scheduler {
         }
         //check if Appointment day is weekend
         Calendar calndr = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try{
-            calndr.setTime(sdf.parse(appointment.getDate().toString()));
+            calndr = new GregorianCalendar(appointment.getDate().getYear(), appointment.getDate().getMonth(), appointment.getDate().getDay());
+            //calndr.setTime(sdf.parse(appointment.getDate().toString()));
         }catch(Exception e){
             System.out.println("Date can not be convert to Calendar object");
             return false;
@@ -323,13 +319,16 @@ public class Scheduler {
     }
 
     public Date getSystemDate(int MonthOffset, int DayOffset, int YearOffset){
+        int INDEX_OFFSET = 1;
 
         Calendar calndr = Calendar.getInstance();
-        calndr.add(Calendar.MONTH, MonthOffset);
+        calndr.setLenient(false);
+        calndr.add(Calendar.MONTH, MonthOffset + INDEX_OFFSET);
         calndr.add(Calendar.DATE, DayOffset);
         calndr.add(Calendar.YEAR, YearOffset);
 
-        String DateString =  new SimpleDateFormat("MM/dd/YYYY").format(calndr.getTime());
-        return generateDate_FromString(DateString.split("/")[0], DateString.split("/")[1], DateString.split("/")[2]);
+        //String DateString =  new SimpleDateFormat("MM/dd/YYYY").format(calndr.getTime());
+        //return generateDate_FromString(DateString.split("/")[0], DateString.split("/")[1], DateString.split("/")[2]);
+        return new Date(calndr.get(Calendar.MONTH), calndr.get(Calendar.DAY_OF_MONTH), calndr.get(Calendar.YEAR));
     }
 }
