@@ -4,7 +4,6 @@
  * Test: No Test Yet
  * 
  */
-
 public class Date implements Comparable<Date> {
     private int year;
     private int month;
@@ -64,6 +63,15 @@ public class Date implements Comparable<Date> {
         int LastDayLimit = 30;
         
 
+        if(month > 12 || year <= 0){
+            return false;
+        }
+
+        long ZeroNegative_Checker = month * days * year;
+        if(ZeroNegative_Checker <= 0){
+            return false;
+        }
+
         if(month == 2 && checkLeapYear(year)){
             LastDayLimit = 29;
         }else if(month == 2 && !checkLeapYear(year)){
@@ -71,12 +79,11 @@ public class Date implements Comparable<Date> {
         }else if(checkBig_Month(month)){
             LastDayLimit = 31;
         }
-
         if(days > LastDayLimit){
             return false;
-        }else{
-            return true;
         }
+
+        return true;
 
     }
 

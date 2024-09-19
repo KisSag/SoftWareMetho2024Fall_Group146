@@ -1,4 +1,8 @@
 import java.util.Scanner;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class Scheduler {
 
     public static final int INDEX_COMMAND = 0;
@@ -22,6 +26,7 @@ public class Scheduler {
         System.out.println("Scheduler is running.");
 
         while(ProgrammeRunner){
+            System.out.println(getSystemDate(6,0,0).toString());
             readCommand(CommandScanner.nextLine());
         }
 
@@ -54,7 +59,6 @@ public class Scheduler {
             case "S"://add new appointment
                 Appointment NewAppointment = generateAppointment(CommandList);
                 if(NewAppointment == null){
-                    System.out.println("Invalid Input");
                 }else{
                     addAppointmentToList(NewAppointment);
                 }
@@ -75,7 +79,6 @@ public class Scheduler {
             case "PL":
                 AppointmentList.printByLocation();
                 break;
-
             default:
                 break;
         }
@@ -83,10 +86,68 @@ public class Scheduler {
 
 
     boolean addAppointmentToList(Appointment appointment){
-        AppointmentList.add(appointment);
-        System.out.println(appointment.toString());
+
+        if(checkAppointmentValid(appointment)){
+            AppointmentList.add(appointment);
+            System.out.println(appointment.toString());
+            return true;
+        }
+
+        return false;
+        
+    }
+    private boolean checkAppointmentValid(Appointment appointment){
+        //if same Appointment already exist
+        if(AppointmentList.contains(appointment)){
+            System.out.println("Date not avaliable: Same Appointment exist");
+            return false;
+        }
+        //if slot is not avaliable
+        if(AppointmentList.getAppointment_byCondition(appointment.getDate(), appointment.getTimeslot(), appointment.getProvider()) != null){
+            System.out.println("Date not avaliable: Appointment conflict at current date");
+            return false;
+        }
+        if(!checkAppointmentValid_DatePart(appointment)){
+            return false;
+        }
         return true;
     }
+    private boolean checkAppointmentValid_DatePart(Appointment appointment){
+        //if Appointment day is is correct format
+        if(!appointment.getDate().isValid()){
+            System.out.println("Date not avaliable: Invalid Date Input");
+            return false;
+        }
+        //if Appointment day is before today
+        if(checkDateValid(appointment.getDate()) <= 0){
+            System.out.println("Date not avaliable: Date can not before today or today");
+            return false;
+        }
+        //if Appointment day is out of six month
+        if(checkDateValid(appointment.getDate()) == 2){
+            System.out.println("Date not avaliable: Date should within 6 month");
+            return false;
+        }
+        //check if Appointment day is weekend
+        Calendar calndr = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        try{
+            calndr.setTime(sdf.parse(appointment.getDate().toString()));
+        }catch(Exception e){
+            System.out.println("Date can not be convert to Calendar object");
+            return false;
+        }
+        int day = calndr.get(Calendar.DAY_OF_WEEK);
+        if(day == Calendar.SATURDAY || day == Calendar.SUNDAY){
+            System.out.println("Date not avaliable: Date is Weekend");
+            return false;
+        }
+        return true;
+    }
+
+
+
+
 
     boolean cancelAppointment(String[] commandArray){
         Appointment TargetAppointment = null;
@@ -103,8 +164,6 @@ public class Scheduler {
             return true;
         }
     }
-
-
     Appointment generateAppointment(String[] commandArray){
         if(commandArray.length != VALID_STRINGLENGTH_S_COMMAND){
             return null;
@@ -143,7 +202,8 @@ public class Scheduler {
     }
     private Profile generateProfile_FromString(String fn, String ln, String Date_String){
         Date date = generateDate_FromString(Date_String.split("/")[0], Date_String.split("/")[1], Date_String.split("/")[2]);
-        if(date == null){
+        if(date == null || checkDateValid(date) > 0){
+            System.out.println("Invalid Patient Birthday");
             return null;
         }
 
@@ -170,5 +230,37 @@ public class Scheduler {
             }
         }
         return null;
+    }
+
+    private int checkDateValid(Date TargetDate){
+        int six_month_offset = 6;
+        
+        //if TargetDate is today
+        if(TargetDate.compareTo(getSystemDate(0,0,0)) == 0){
+            return 0;
+        }
+
+        //if TargetDate is before today, return -1
+        if(TargetDate.compareTo(getSystemDate(0,0,0)) == -1){
+            return -1;
+        }
+        //if TargetDate is after today within 6 month, return 1
+        if(TargetDate.compareTo(getSystemDate(six_month_offset,0,0)) != 1){
+            return 1;
+        }else{
+            return 2;
+        }
+        
+    }
+
+    public Date getSystemDate(int MonthOffset, int DayOffset, int YearOffset){
+
+        Calendar calndr = Calendar.getInstance();
+        calndr.add(Calendar.MONTH, MonthOffset);
+        calndr.add(Calendar.DATE, DayOffset);
+        calndr.add(Calendar.YEAR, YearOffset);
+
+        String DateString =  new SimpleDateFormat("MM/dd/YYYY").format(calndr.getTime());
+        return generateDate_FromString(DateString.split("/")[0], DateString.split("/")[1], DateString.split("/")[2]);
     }
 }

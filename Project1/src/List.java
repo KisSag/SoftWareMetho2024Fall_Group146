@@ -100,7 +100,6 @@ public class List {
         return appointments[index];
     }
     public Appointment getAppointment_byCondition(Date date, Timeslot slot, Profile patient){
-
         for(int i = 0; i < appointments.length; i += 1){
             
             if(appointments[i].getDate().equals(date) && appointments[i].getTimeslot() == slot && appointments[i].getPatient().equals(patient)){
@@ -109,7 +108,21 @@ public class List {
         }
         return null;
     }
-
+    public Appointment getAppointment_byCondition(Date date, Timeslot slot, Provider provider){
+        
+        for(int i = 0; i < appointments.length; i += 1){
+            
+            if(appointments[i] == null){
+                continue;
+            }
+            
+            if(appointments[i].getDate().equals(date) && appointments[i].getTimeslot() == slot && appointments[i].getProvider() == provider){
+                return appointments[i];
+            }
+        }
+         
+        return null;
+    }
 
     public void printByPatient(){//ordered by patient profile, date/timeslot 
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
