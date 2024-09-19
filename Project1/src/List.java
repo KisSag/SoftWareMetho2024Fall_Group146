@@ -92,14 +92,23 @@ public class List {
     public int getSize_ValidAppointments(){
         return size;
     }
-    public Appointment getAppointment(int index){
+    public Appointment getAppointment_byIndex(int index){
         if(index < 0 || index >= appointments.length){
             return null;
         }
 
         return appointments[index];
     }
-    
+    public Appointment getAppointment_byCondition(Date date, Timeslot slot, Profile patient){
+
+        for(int i = 0; i < appointments.length; i += 1){
+            
+            if(appointments[i].getDate().equals(date) && appointments[i].getTimeslot() == slot && appointments[i].getPatient().equals(patient)){
+                return appointments[i];
+            }
+        }
+        return null;
+    }
 
 
     public void printByPatient(){//ordered by patient profile, date/timeslot 
