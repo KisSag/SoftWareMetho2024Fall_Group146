@@ -12,7 +12,7 @@ public class Scheduler {
     public static final int INDEX_LASTNAME = 4;
     public static final int INDEX_BIRTHDAY = 5;
     public static final int INDEX_PROVIDER = 6;
-
+    public static final int INDEX_NEWTIMESLOT = 6;
     public static final int VALID_STRINGLENGTH_S_COMMAND = 7;
 
 
@@ -26,21 +26,12 @@ public class Scheduler {
         System.out.println("Scheduler is running.");
 
         while(ProgrammeRunner){
-            System.out.println(getSystemDate(6,0,0).toString());
             readCommand(CommandScanner.nextLine());
         }
 
         CommandScanner.close();
         System.out.println("Scheduler terminated");
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -70,6 +61,9 @@ public class Scheduler {
                     System.out.println("Cancel Failed");
                 }
                 break;
+            case "R":
+                rescheduleAppointment(CommandList);
+                break;
             case "PA":
                 AppointmentList.printByAppointment();
                 break;
@@ -79,17 +73,25 @@ public class Scheduler {
             case "PL":
                 AppointmentList.printByLocation();
                 break;
+            case "PS":
+                calculateBill();
+                break;
             default:
+                System.out.println("Invalid Command!");
                 break;
         }
     }
+
+
+
+    
 
 
     boolean addAppointmentToList(Appointment appointment){
 
         if(checkAppointmentValid(appointment)){
             AppointmentList.add(appointment);
-            System.out.println(appointment.toString());
+            System.out.println("Add Appointment Successful");
             return true;
         }
 
@@ -146,9 +148,44 @@ public class Scheduler {
     }
 
 
+    boolean rescheduleAppointment(String[] commandArray){
+        if(commandArray.length != VALID_STRINGLENGTH_S_COMMAND){
+            return false;
+        }
 
+        Date date = null;
+        Timeslot slot = null;
+        Profile patient = null;
 
+        try{
+            date = generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[0], commandArray[INDEX_APPONTMENTDATE].split("/")[1], commandArray[INDEX_APPONTMENTDATE].split("/")[2]);
+            slot = generateTimeSlot_FromString(commandArray[INDEX_TIMESLOT]);
+            patient = generateProfile_FromString(commandArray[INDEX_FIRSTNAME], commandArray[INDEX_LASTNAME], commandArray[INDEX_BIRTHDAY]);
+        }catch(Exception e){
+            return false;
+        }
 
+        Appointment TargetAppointment = AppointmentList.getAppointment_byCondition(date, slot, patient);
+        if(TargetAppointment == null){
+            System.out.println("Reschdule failed: No Appointment found");
+            return false;
+        }
+
+        Timeslot newTimeslot = generateTimeSlot_FromString(commandArray[INDEX_NEWTIMESLOT]);
+        if(newTimeslot == null){
+            System.out.println(Integer.parseInt(commandArray[INDEX_NEWTIMESLOT]) + " is not a valid time slot");
+            return false;
+        }
+        Appointment ReschduledAppointment = new Appointment(TargetAppointment.getDate(), newTimeslot, TargetAppointment.getPatient(), TargetAppointment.getProvider());
+        if(!addAppointmentToList(ReschduledAppointment)){
+            return false;
+        }
+
+        AppointmentList.remove(TargetAppointment);
+        return true;
+
+        
+    }
     boolean cancelAppointment(String[] commandArray){
         Appointment TargetAppointment = null;
         try{
@@ -165,6 +202,7 @@ public class Scheduler {
         }
     }
     Appointment generateAppointment(String[] commandArray){
+
         if(commandArray.length != VALID_STRINGLENGTH_S_COMMAND){
             return null;
         }
@@ -190,7 +228,30 @@ public class Scheduler {
 
         return new Appointment(date, slot, patient, provider);
     }
+    
+    void calculateBill(){
+        AppointmentList.setMedicalRecord(medicalRecord);
+        Patient[] PatientList = medicalRecord.getPatientsList();
 
+        if(PatientList == null || PatientList.length == 0){
+            System.out.println("No Medical Record");
+            return;
+        }
+
+        /*
+        for(int i = 0; i < PatientList.length; i += 1){
+            if(PatientList[i] == null){
+                continue;
+            }
+            System.out.println(PatientList[i].getProfile().toString());
+        }
+        */
+        AppointmentList.cleanList();
+
+    }
+    
+    
+    
     private Date generateDate_FromString(String Month, String Day, String Year){
         Date date;
         try{
@@ -202,7 +263,7 @@ public class Scheduler {
     }
     private Profile generateProfile_FromString(String fn, String ln, String Date_String){
         Date date = generateDate_FromString(Date_String.split("/")[0], Date_String.split("/")[1], Date_String.split("/")[2]);
-        if(date == null || checkDateValid(date) > 0){
+        if(date == null || checkDateValid(date) > 0 || !date.isValid()){
             System.out.println("Invalid Patient Birthday");
             return null;
         }
@@ -217,6 +278,12 @@ public class Scheduler {
         return profile;
     }
     private Timeslot generateTimeSlot_FromString(String Slot){
+
+        int ENUMIndex = Integer.parseInt(Slot);
+        if(ENUMIndex < 1 || ENUMIndex > 6){
+            return null;
+        }
+
         try{
             return Timeslot.values()[Integer.parseInt(Slot)-1];
         }catch(Exception e){

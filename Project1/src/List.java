@@ -101,7 +101,10 @@ public class List {
     }
     public Appointment getAppointment_byCondition(Date date, Timeslot slot, Profile patient){
         for(int i = 0; i < appointments.length; i += 1){
-            
+            if(appointments[i] == null){
+                continue;
+            }
+
             if(appointments[i].getDate().equals(date) && appointments[i].getTimeslot() == slot && appointments[i].getPatient().equals(patient)){
                 return appointments[i];
             }
@@ -115,7 +118,7 @@ public class List {
             if(appointments[i] == null){
                 continue;
             }
-            
+
             if(appointments[i].getDate().equals(date) && appointments[i].getTimeslot() == slot && appointments[i].getProvider() == provider){
                 return appointments[i];
             }
@@ -123,9 +126,35 @@ public class List {
          
         return null;
     }
+    public int getAppointmentIndex(Appointment appointment){
+        return find(appointment);
+    }
+
+
+
+    public void setMedicalRecord(MedicalRecord record){
+        for(int i = 0; i < appointments.length; i += 1){
+            if(appointments[i] != null){
+                record.add(appointments[i]);
+            }
+        }
+    }
+
+
+
+    public void cleanList(){
+        for(int i = 0; i < appointments.length; i += 1){
+            appointments[i] = null;
+        }
+        size = 0;
+    }
 
     public void printByPatient(){//ordered by patient profile, date/timeslot 
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
+        if(arrTemp.length == 0){
+            System.out.println("Schedule Canlendat is empty");
+            return;
+        }
         printByPatient_helper_bubbleSort(arrTemp, arrTemp.length);
     
     }
@@ -164,6 +193,10 @@ public class List {
 
     public void printByLocation(){//ordered by county, date/timeslot
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
+        if(arrTemp.length == 0){
+            System.out.println("Schedule Canlendat is empty");
+            return;
+        }
         printByLocation_helper_bubbleSort(arrTemp, arrTemp.length);
     } 
     void printByLocation_helper_bubbleSort(Appointment arr[], int n){
@@ -199,6 +232,10 @@ public class List {
 
     public void printByAppointment(){
         Appointment[] arrTemp = generateCleanAppointmentArray(appointments);
+        if(arrTemp.length == 0){
+            System.out.println("Schedule Canlendat is empty");
+            return;
+        }
         printByAppointment_helper_bubbleSort(arrTemp, arrTemp.length);
 
     }
@@ -233,20 +270,11 @@ public class List {
         outputSortedResult(arr); //output the result
     }
 
-
-
-
-
-
-
-
-
-    /*
-    public void printByAppointment()//ordered by date/timeslot, provider name
-    */
-
     private void outputSortedResult(Appointment[] AppontArr){
         for(int i = 0; i < AppontArr.length; i += 1){
+            if(AppontArr[i] == null){
+                return;
+            }
             System.out.println(AppontArr[i].toString() + "");
         }
     }

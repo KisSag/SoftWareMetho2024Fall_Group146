@@ -13,6 +13,10 @@ public class Patient implements Comparable<Patient> {
         profile = null;
         visits = null;
     }
+    public Patient(Appointment appointment){
+        profile = appointment.getPatient();
+        visits = new Visit(appointment);
+    }
     public Patient(Profile pro){
         profile = pro;
         visits = null;
@@ -31,7 +35,8 @@ public class Patient implements Comparable<Patient> {
 
     public void addFinishedAppointment(Appointment appointment){
         Visit NewFinishedVisit = new Visit(appointment);
-        visits.getLastedFinishedVisit().assignNextFinishedVisit(NewFinishedVisit);
+        NewFinishedVisit.assignNextFinishedVisit(visits);
+        visits = NewFinishedVisit;
     }
 
     //get Data

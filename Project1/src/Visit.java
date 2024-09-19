@@ -15,8 +15,6 @@ public class Visit {
     public void assignNextFinishedVisit(Visit visit){
         next = visit;
     }
-
-
     //get data
     public Appointment getCurrentAppointment(){
         return appointment;

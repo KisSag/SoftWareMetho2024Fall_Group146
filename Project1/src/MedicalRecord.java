@@ -11,35 +11,38 @@ public class MedicalRecord {
     }
 
 
-    public void addPatient(Patient pa){
+    public void add(Appointment appointment){
+        //check if patient is exist
+        int TargetIndex = getIndexPatient(appointment.getPatient());
 
-        //Patien already exist
-        if(getIndexPatient(pa) != -1){
-            return;
+        if(TargetIndex == -1){
+            generateNewPatient(appointment);
+        }else{
+            //patients[TargetIndex].addFinishedAppointment(appointment);
         }
 
-        //add to blankspot
+    }
+
+    private void generateNewPatient(Appointment appointment){
         for(int i = 0; i < patients.length; i += 1){
             if(patients[i] == null){
-                patients[i] = pa;
+                patients[i] = new Patient(appointment);
                 return;
             }
         }
 
-        //if list is full
         grow();
-        patients[patients.length - LENGTH_INCREASECAPACITY] = pa;
-
+        patients[patients.length - LENGTH_INCREASECAPACITY] = new Patient(appointment);
     }
 
     public int countPatientNumber(){
         return size;
     }
 
-    public int getIndexPatient(Patient pa){
+    public int getIndexPatient(Profile pa){
         
         for(int i = 0; i < patients.length; i += 1){
-            if(patients[i] != null && patients[i].equals(pa)){
+            if(patients[i] != null && patients[i].getProfile().equals(pa)){
                 return i;
             }
         }
@@ -51,6 +54,10 @@ public class MedicalRecord {
         return patients[index];
     }
 
+    public Patient[] getPatientsList(){
+        return patients;
+    }
+    
     private void grow(){
 
         Patient[] new_patients = new Patient[patients.length + LENGTH_INCREASECAPACITY];

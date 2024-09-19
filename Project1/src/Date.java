@@ -61,7 +61,6 @@ public class Date implements Comparable<Date> {
 
     private boolean checkDayValid(int month, int days, int year){
         int LastDayLimit = 30;
-        
 
         if(month > 12 || year <= 0){
             return false;
