@@ -14,6 +14,15 @@ public class Scheduler {
     public static final int INDEX_NEWTIMESLOT = 6;
     public static final int VALID_STRINGLENGTH_S_COMMAND = 7;
 
+    public static final int VALIDDAY_TODAY = 0;
+    public static final int VALIDDAY_BEFORETODAY = -1;
+    public static final int VALIDDAT_AFTERTODAY_INSIXMONTH = 1;
+    public static final int VALIDDAY_AFTERTODAY_OUTSIXMONTH = 2;
+
+    public static final int DATEINDEX_MONTH = 0;
+    public static final int DATEINDEX_DAY = 1;
+    public static final int DATEINDEX_YEAR = 2;
+
 
     public static boolean ProgrammeRunner = true;
     public static List AppointmentList = new List();
@@ -152,7 +161,7 @@ public class Scheduler {
         Profile patient = null;
 
         try{
-            date = generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[0], commandArray[INDEX_APPONTMENTDATE].split("/")[1], commandArray[INDEX_APPONTMENTDATE].split("/")[2]);
+            date = generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_MONTH], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_DAY], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_YEAR]);
             slot = generateTimeSlot_FromString(commandArray[INDEX_TIMESLOT]);
             patient = generateProfile_FromString(commandArray[INDEX_FIRSTNAME], commandArray[INDEX_LASTNAME], commandArray[INDEX_BIRTHDAY]);
         }catch(Exception e){
@@ -183,7 +192,7 @@ public class Scheduler {
     boolean cancelAppointment(String[] commandArray){
         Appointment TargetAppointment = null;
         try{
-            TargetAppointment = AppointmentList.getAppointment_byCondition(generateDate_FromString(commandArray[1].split("/")[0], commandArray[1].split("/")[1], commandArray[1].split("/")[2]),generateTimeSlot_FromString(commandArray[2]), generateProfile_FromString(commandArray[3], commandArray[4], commandArray[5]));
+            TargetAppointment = AppointmentList.getAppointment_byCondition(generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_MONTH], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_DAY], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_YEAR]),generateTimeSlot_FromString(commandArray[INDEX_TIMESLOT]), generateProfile_FromString(commandArray[INDEX_FIRSTNAME], commandArray[INDEX_LASTNAME], commandArray[INDEX_BIRTHDAY]));
         }catch(Exception e){
             return false;
         }
@@ -207,7 +216,7 @@ public class Scheduler {
         Provider provider = null;
 
         try{
-            date = generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[0], commandArray[INDEX_APPONTMENTDATE].split("/")[1], commandArray[INDEX_APPONTMENTDATE].split("/")[2]);
+            date = generateDate_FromString(commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_MONTH], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_DAY], commandArray[INDEX_APPONTMENTDATE].split("/")[DATEINDEX_YEAR]);
             slot = generateTimeSlot_FromString(commandArray[INDEX_TIMESLOT]);
             patient = generateProfile_FromString(commandArray[INDEX_FIRSTNAME], commandArray[INDEX_LASTNAME], commandArray[INDEX_BIRTHDAY]);
             provider = generateProvider_FromString(commandArray[INDEX_PROVIDER]);
@@ -259,7 +268,7 @@ public class Scheduler {
         return date;
     }
     private Profile generateProfile_FromString(String fn, String ln, String Date_String){
-        Date date = generateDate_FromString(Date_String.split("/")[0], Date_String.split("/")[1], Date_String.split("/")[2]);
+        Date date = generateDate_FromString(Date_String.split("/")[DATEINDEX_MONTH], Date_String.split("/")[DATEINDEX_DAY], Date_String.split("/")[DATEINDEX_YEAR]);
         if(date == null || checkDateValid(date) > 0 || !date.isValid()){
             System.out.println("Invalid Patient Birthday");
             return null;
@@ -300,19 +309,19 @@ public class Scheduler {
         int six_month_offset = 6;
         
         //if TargetDate is today
-        if(TargetDate.compareTo(getSystemDate(0,0,0)) == 0){
+        if(TargetDate.compareTo(getSystemDate(0,0,0)) == VALIDDAY_TODAY){
             return 0;
         }
 
         //if TargetDate is before today, return -1
-        if(TargetDate.compareTo(getSystemDate(0,0,0)) == -1){
-            return -1;
+        if(TargetDate.compareTo(getSystemDate(0,0,0)) == VALIDDAY_BEFORETODAY){
+            return VALIDDAY_BEFORETODAY;
         }
         //if TargetDate is after today within 6 month, return 1
         if(TargetDate.compareTo(getSystemDate(six_month_offset,0,0)) != 1){
-            return 1;
+            return VALIDDAT_AFTERTODAY_INSIXMONTH;
         }else{
-            return 2;
+            return VALIDDAY_AFTERTODAY_OUTSIXMONTH;
         }
         
     }

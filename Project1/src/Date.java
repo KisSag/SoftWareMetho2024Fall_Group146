@@ -14,6 +14,11 @@ public class Date implements Comparable<Date> {
     public static final int QUATERCENTENNIAL = 400;
     public static final int[] Big_Month = {1,3,5,7,8,10,12};
 
+    public static final int LASTDAY_FEB_LEAPYEAR = 29;
+    public static final int LASTDAY_FEB_NOTLEAPYEAR = 28;
+    public static final int LASTDAY_NORMALMONTH_BIG = 31;
+    public static final int LASTDAY_NORMALMONTH_SMALL = 30;
+
     //constructor
     //default
     public Date(){
@@ -60,7 +65,7 @@ public class Date implements Comparable<Date> {
     }
 
     private boolean checkDayValid(int month, int days, int year){
-        int LastDayLimit = 30;
+        int LastDayLimit = LASTDAY_NORMALMONTH_SMALL;
 
         if(month > 12 || year <= 0){
             return false;
@@ -72,11 +77,11 @@ public class Date implements Comparable<Date> {
         }
 
         if(month == 2 && checkLeapYear(year)){
-            LastDayLimit = 29;
+            LastDayLimit = LASTDAY_FEB_LEAPYEAR;
         }else if(month == 2 && !checkLeapYear(year)){
-            LastDayLimit = 28;
+            LastDayLimit = LASTDAY_FEB_NOTLEAPYEAR;
         }else if(checkBig_Month(month)){
-            LastDayLimit = 31;
+            LastDayLimit = LASTDAY_NORMALMONTH_BIG;
         }
         if(days > LastDayLimit){
             return false;
