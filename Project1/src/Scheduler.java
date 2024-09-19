@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class Scheduler {
 
@@ -132,7 +131,7 @@ public class Scheduler {
         }
         //check if Appointment day is weekend
         Calendar calndr = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try{
             calndr.setTime(sdf.parse(appointment.getDate().toString()));
         }catch(Exception e){
