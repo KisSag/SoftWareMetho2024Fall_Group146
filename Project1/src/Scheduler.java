@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class Scheduler {
 
@@ -135,7 +134,8 @@ public class Scheduler {
         Calendar calndr = Calendar.getInstance();
         //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try{
-            calndr = new GregorianCalendar(appointment.getDate().getYear(), appointment.getDate().getMonth() - CALENDAR_OFFSET, appointment.getDate().getDay());
+            //calndr = new Calendar(appointment.getDate().getYear(), appointment.getDate().getMonth() - CALENDAR_OFFSET, appointment.getDate().getDay());
+            calndr.set(appointment.getDate().getYear(), appointment.getDate().getMonth() - CALENDAR_OFFSET, appointment.getDate().getDay());
             //System.out.println(calndr.getTime());
             //calndr.setTime(sdf.parse(appointment.getDate().toString()));
         }catch(Exception e){
@@ -153,6 +153,7 @@ public class Scheduler {
 
     boolean rescheduleAppointment(String[] commandArray){
         if(commandArray.length != VALID_STRINGLENGTH_S_COMMAND){
+            System.out.println("Invalid Command");
             return false;
         }
 
