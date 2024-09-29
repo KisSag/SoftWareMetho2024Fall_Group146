@@ -1,6 +1,6 @@
 /**
  * Last Modified: 9/17/2024
- * Name: Tianxiang Huang
+ * @author: Tianxiang Huang
  * Test: basic Test
  * 
  */
@@ -284,7 +284,7 @@ public class List {
     //////////Test below///////////
     ///////////////////////////////
 
-    /*
+    
     public static void main(String[] args)
     {
         Date da = new Date(10, 16, 2001);
@@ -313,6 +313,6 @@ public class List {
 
         appList.printByAppointment();
     }
-    */
+    
     
 } 

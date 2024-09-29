@@ -1,6 +1,6 @@
 /**
  * Last Modified: 9/29/2024
- * Name: Tianxiang Huan, Jayden Hsu
+ * @author: Tianxiang Huan, Jayden Hsu
  * Test: DOne
  * 
  */

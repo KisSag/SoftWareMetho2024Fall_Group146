@@ -1,6 +1,6 @@
 /**
  * Last Modified: 9/16/2024
- * Name: Tianxiang Huang
+ * @author: Tianxiang Huang
  * Test: No Test Yet
  * 
  */
@@ -71,7 +71,6 @@ public class Appointment implements Comparable<Appointment>{
 
 
     //Test
-    /*
     public static void main(String[] args)
     {
         Date da = new Date(10, 16, 2001);
@@ -90,8 +89,7 @@ public class Appointment implements Comparable<Appointment>{
         Date appDa2 = new Date(2, 1, 2036);
         Appointment app2 = new Appointment(appDa2, Timeslot.SLOT4, patient2, Provider.CERAVOLO);
 
-        System.out.println(app1.equals(app1));
+        System.out.println(app1.equals(app2));
     }
-    */
 
 }

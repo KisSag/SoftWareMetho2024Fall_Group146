@@ -1,3 +1,9 @@
+/**
+ * Last Modified: 9/29/2024
+ * @author: Tianxiang Huang, Jayden Hsu
+ * Test: Done
+ * 
+ */
 public class MedicalRecord { 
     public static final int LENGTH_INITIALLIST = 4; 
     public static final int LENGTH_INCREASECAPACITY = 4; 
