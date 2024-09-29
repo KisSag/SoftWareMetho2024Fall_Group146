@@ -1,3 +1,10 @@
+/**
+ * Last Modified: 9/29/2024
+ * Name: Tianxiang Huang
+ * Test: Done
+ * 
+ */
+
 import java.util.Scanner;
 import java.util.Calendar;
 
@@ -408,4 +415,57 @@ public class Scheduler {
 
         System.out.println("**end of list**");
     }
+
+     public static void main(String[] args) {
+        Scheduler scheduler = new Scheduler();
+
+        // Test case 1: Add a valid appointment
+        Profile profile1 = new Profile("Jayden", "Hsu", new Date(11, 21, 1990));
+        Appointment appointment1 = new Appointment(new Date(11, 21, 2024), Timeslot.SLOT1, profile1, Provider.PATEL);
+        boolean result1 = scheduler.addAppointmentToList(appointment1);
+        System.out.println("Test case 1: Appointment added? " + result1); // Expected: true
+        System.out.println();
+
+
+        // Test case 2: Attempt to add the same appointment again (duplicate)
+        boolean result2 = scheduler.addAppointmentToList(appointment1);
+        System.out.println("Test case 2: Duplicate appointment added? " + result2); // Expected: false
+        System.out.println();
+
+
+        // Test case 3: Add an appointment with a conflicting timeslot but different provider
+        Profile profile2 = new Profile("Huang", "Tianxiang", new Date(11, 21, 1990));
+        Appointment appointment2 = new Appointment(new Date(11, 21, 2024), Timeslot.SLOT1, profile2, Provider.LIM);
+        boolean result3 = scheduler.addAppointmentToList(appointment2);
+        System.out.println("Test case 3: Conflicting appointment added? " + result3); // Expected: true   
+        System.out.println();
+
+
+        // Test case 4: Add a valid appointment with a different date and timeslot
+        Appointment appointment3 = new Appointment(new Date(11, 22, 2024), Timeslot.SLOT2, profile1, Provider.PATEL);
+        boolean result4 = scheduler.addAppointmentToList(appointment3);
+        System.out.println("Test case 4: Different appointment added? " + result4); // Expected: true
+        System.out.println();
+
+
+        // Test case 5: Cancel an existing appointment
+        String[] cancelCommand = {"C", "11/21/2024", "1", "Jayden", "Hsu", "11/21/1990"};
+        boolean result5 = scheduler.cancelAppointment(cancelCommand);
+        System.out.println("Test case 5: Appointment canceled? " + result5); // Expected: true
+        System.out.println();
+
+
+        // Test case 6: Attempt to cancel a non-existing appointment
+        String[] cancelCommand2 = {"C", "11/23/2024", "1", "Jayden", "Hsu", "11/21/1990"};
+        boolean result6 = scheduler.cancelAppointment(cancelCommand2);
+        System.out.println("Test case 6: Non-existing appointment canceled? " + result6); // Expected: false
+        System.out.println();
+
+
+        // Test case 7: Reschedule an appointment to a valid new timeslot
+        String[] rescheduleCommand = {"R", "11/22/2024", "2", "Jayden", "Hsu", "11/21/1990", "3"};
+        boolean result7 = scheduler.rescheduleAppointment(rescheduleCommand);
+        System.out.println("Test case 7: Appointment rescheduled? " + result7); // Expected: true
+        System.out.println();
+     }
 }
