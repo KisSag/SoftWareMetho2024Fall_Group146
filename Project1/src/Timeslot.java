@@ -1,7 +1,7 @@
 /**
- * Last Modified: 9/16/2024
- * Name: Tianxiang Huang
- * Test: No Test Yet
+ * Last Modified: 9/29/2024
+ * Name: Tianxiang Huan, Jayden Hsu
+ * Test: DOne
  * 
  */
 public enum Timeslot { 
@@ -38,4 +38,12 @@ public enum Timeslot {
 
         return result;
     }
+
+     public static void main(String[] args) {
+        //Test cases: Get time slot details
+        System.out.println("Test case 1: " + Timeslot.SLOT1.getString_TimeSlot()); //Expected: 9:0 AM
+        System.out.println("Test case 2: " + Timeslot.SLOT4.getString_TimeSlot()); //Expected: 13:30 PM
+        System.out.println("Test case 3: " + Timeslot.SLOT5.getString_TimeSlot()); //Expected: 15:0 PM
+    }
+    
 }
