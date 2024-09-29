@@ -1,7 +1,7 @@
 /**
- * Last Modified: 9/17/2024
- * Name: Tianxiang Huang
- * Test: No Test Yet
+ * Last Modified: 9/29/2024
+ * Name: Tianxiang Huang, Jayden Hsu
+ * Test: Done
  * 
  */
 public class Patient implements Comparable<Patient> { 
@@ -63,4 +63,18 @@ public class Patient implements Comparable<Patient> {
         result += "[Amount due: $" + Float.toString(charge()) + "]";
         return result;
     }
+
+    public static void main(String[] args) {
+        Profile profile1 = new Profile("Jayden", "Hsu", new Date(1, 1, 1990));
+        Appointment appointment1 = new Appointment(new Date(11, 21, 2024), Timeslot.SLOT1, profile1, Provider.PATEL);
+        Patient patient = new Patient(appointment1);
+
+        //Test case 1: Get profile of patient
+        System.out.println("Test case 1: " + patient.getProfile().getFirstName()); //Expected: Jayden
+
+        //Test case 2: Add finished appointment
+        patient.addFinishedAppointment(appointment1);
+        System.out.println("Test case 2: First finished visit: " + patient.getFirstFinihedVisit().getCurrentAppointment().getDate()); //Expected: 11/21/2024
+    }
+    
 }
