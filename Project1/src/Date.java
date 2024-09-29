@@ -148,6 +148,37 @@ public class Date implements Comparable<Date> {
         }
         return false;
     }
+
+    public static void main(String[] args) {
+        //Test case 1: January 1, Year -2000 (invalid negative year)
+        //Testing: The system should reject negative years. In most date systems, there is no concept of negative years.
+        Date date1 = new Date(1, 1, -2000);
+        System.out.println("Test case 1: " + date1 + " is valid? " + date1.isValid()); //Expected: false
     
+        //Test case 2: Non-leap year, invalid February 29
+        //Testing: February 29 is only valid in leap years. 2018 is a common year, not a leap year, so February 29 is invalid.
+        Date date2 = new Date(2, 29, 2018); 
+        System.out.println("Test case 2: " + date2 + " is valid? " + date2.isValid()); //Expected: false
+    
+        //Test case 3: Invalid month (outside valid range)
+        //Testing: The month value should be between 1 and 12. Month 13 is invalid.
+        Date date3 = new Date(13, 5, 2024);
+        System.out.println("Test case 3: " + date3 + " is valid? " + date3.isValid()); //Expected: false
+    
+        //Test case 4: Valid date
+        //Testing: November 21, 2024, is a valid date. This test confirms that the `isValid()` method works for a standard valid date.
+        Date date4 = new Date(11, 21, 2024);
+        System.out.println("Test case 4: " + date4 + " is valid? " + date4.isValid()); //Expected: true
+    
+        //Test case 5: Invalid day for June (June has 30 days, but testing for 31)
+        //Testing: June only has 30 days. The `isValid()` method should return false for June 31, as it exceeds the valid day range for June.
+        Date date5 = new Date(6, 31, 2024); 
+        System.out.println("Test case 5: " + date5 + " is valid? " + date5.isValid()); //Expected: false
+    
+        //Test case 6: Valid leap year date for February 29
+        //Testing: February 29 is valid in leap years. 2020 is a leap year, so this test ensures the system correctly handles leap year validation.
+        Date date6 = new Date(2, 29, 2020); // 2020 is a leap year
+        System.out.println("Test case 6: " + date6 + " is valid? " + date6.isValid()); //Expected: true
+    }    
 
 }
