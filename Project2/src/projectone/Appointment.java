@@ -125,4 +125,13 @@ public class Appointment implements Comparable<Appointment>{
     }
     */
 
+    /*
+    public static void main(String[] args){
+        Date da = new Date(10, 16, 2001);
+        Patient pa1 = new Patient(new Profile("Tianxiang", "Huang", da));
+
+
+    }
+    */
+
 }
