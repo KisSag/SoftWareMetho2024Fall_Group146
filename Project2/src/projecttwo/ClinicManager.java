@@ -60,7 +60,6 @@ public class ClinicManager {
           break;
       }
 
-
     }
 
 
@@ -119,7 +118,7 @@ public class ClinicManager {
         return;
       }
 
-      
+      AppointmentList.add(appointment);
     }
 
 

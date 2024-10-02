@@ -19,7 +19,10 @@ public class MedicalRecord {
     }
 
 
-
+    /**
+     * add a appointment with its patient into record
+     * @param appointment
+     */
     public void add(Appointment appointment){
         //check if patient is exist
         int TargetIndex = getIndexPatient(appointment.getPatient().getProfile());
@@ -32,6 +35,10 @@ public class MedicalRecord {
 
     }
 
+    /**
+     * read a valid appointment and extract patient info into record
+     * @param appointment
+     */
     private void generateNewPatient(Appointment appointment){
         for(int i = 0; i < patients.length; i += 1){
             if(patients[i] == null){
@@ -46,6 +53,10 @@ public class MedicalRecord {
         size++; //Increment the size when the array grows and a new patient is added
     }
 
+    /**
+     * get how many Patient in Record
+     * @return
+     */
     public int countPatientNumber(){
         return size;
     }
