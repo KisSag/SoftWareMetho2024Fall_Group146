@@ -1,3 +1,6 @@
+package projecttwo;
+import projectone.*;
+
 public class Imaging extends Appointment {
     private Radiology room; // CATSCAN, ULTRASOUND, XRAY
 
@@ -7,7 +10,10 @@ public class Imaging extends Appointment {
         this.room = room; // Assign the radiology room
     }
 
-    // Getter for the radiology room
+    /**
+     * Getter for the radiology room
+     * @return the radiology room
+     */
     public Radiology getRoom() {
         return this.room;
     }
