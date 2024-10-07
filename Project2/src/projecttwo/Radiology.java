@@ -1,3 +1,5 @@
+package projecttwo;
+
 public enum Radiology {
     XRAY,  // X-ray service
     ULTRASOUND,  // Ultrasound service
