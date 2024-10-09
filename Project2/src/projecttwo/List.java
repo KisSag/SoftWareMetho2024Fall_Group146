@@ -3,7 +3,6 @@ package projecttwo;
 import java.util.Iterator;
 
 //A generic List class to manage collections of objects like Appointments or Providers.\
-
 public class List<E> implements Iterable<E> {
     private static final int INITIAL_CAPACITY = 4;
     private static final int CAPACITY_INCREMENT = 4;
@@ -78,28 +77,29 @@ public class List<E> implements Iterable<E> {
     public boolean isEmpty() {
         return size == 0;
     }
-
-    @Override
+    
     public Iterator<E> iterator() {
         return new ListIterator();
+        //return null;
     }
+    
 
+    
     // Inner class to implement iterator
     private class ListIterator implements Iterator<E> {
         private int currentIndex = 0;
 
-        @Override
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return currentIndex < size;
         }
 
-        @Override
-        public E next() {
+        @Override public E next() {
             return elements[currentIndex++];
         }
     }
-
-
+    
+    
+    /* doesn't matter I guess, similar function can be achieved in ClinicManager.class
     // Rotate a circular list of technicians for assigning imaging appointments.
     public E getNextTechnician() {
         E technician = elements[0]; // Circular rotation logic here
@@ -108,4 +108,19 @@ public class List<E> implements Iterable<E> {
         add(technician);
         return technician;
     }
+    */
+    /*
+    public static void main(String [] args) {
+
+        List<Integer> testINT = new List<Integer>();
+
+        Random rand = new Random();
+
+        for(int i = 0; i < 99; i += 1){
+            testINT.add(rand.nextInt(1000));
+        }
+
+        System.out.println(testINT.get(1));
+    }
+    */
 }

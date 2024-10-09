@@ -18,12 +18,19 @@ public class Imaging extends Appointment {
         return this.room;
     }
 
+    
+    public boolean checkAppointmentConflict(Date date, Timeslot slot, Technician tech){
+        if(getProvider().equals(tech) && getDate().equals(date) && getTimeslot().equals(slot)){
+            return true;
+        }
+        return false;
+    }
+
     // Override toString() to include the room type
     @Override
     public String toString() {
         return super.toString() + ", Imaging Room: " + room;
     }
-
     // Override compareTo to compare Imaging appointments
     @Override
     public int compareTo(Appointment otherAppointment) {

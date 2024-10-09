@@ -77,13 +77,36 @@ public class Appointment implements Comparable<Appointment>{
         return provider;
     }
 
+    /**
+     * given a appointment, check if given appointment is conflict with current appointment by provider
+     * @param appointment
+     * @return true if conflict, false else.
+     */
+    public boolean checkAppointmentConflict_Provider(Appointment appointment){
+        if(getProvider().equals(appointment.getProvider()) && getDate().equals(appointment.getDate()) && getTimeslot().equals(appointment.getTimeslot())){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * given a appointment, check if given appointment is conflict with current appointment by patient
+     * @param appointment
+     * @return true if conflict, false else.
+     */
+    public boolean checkAppointmentConflict_Patient(Appointment appointment){
+        if(getPatient().equals(appointment.getPatient()) && getDate().equals(appointment.getDate()) && getTimeslot().equals(appointment.getTimeslot())){
+            return true;
+        }
+        return false;
+    }
 
     @Override public String toString(){
         String result = "";
         result += date.toString() + " ";
         result.toLowerCase();
         result += timeslot.toString() + " ";
-        result += patient.toString() + " ";
+        result += patient.toString();
         result += provider.toString();
 
         return result;

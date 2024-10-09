@@ -66,6 +66,6 @@ public class Doctor extends Provider {
         return this.profile.equals(TargetDoctor.getProfile());
     }
     @Override public String toString(){
-        return profile.toString() + " " + location.toString() + " " + specialty.toString() + " " + npi;
+        return "[" + profile.toString() + ", " + location.toString() + " ] [" + specialty.toString() + " #" + npi + "]";
     }
 }

@@ -41,7 +41,13 @@ public class Timeslot implements Comparable<Timeslot>{
     }
 
     @Override public String toString(){
-        return Integer.toString(hour) + ":" + Integer.toString(minuts);
+        String result = Integer.toString(hour) + ":" + Integer.toString(minuts);
+        if(hour >= 12){
+            result += " PM";
+        }else{
+            result += " AM";
+        }
+        return result;
     }
     @Override public boolean equals(Object other){
         if(other.getClass() != this.getClass()){

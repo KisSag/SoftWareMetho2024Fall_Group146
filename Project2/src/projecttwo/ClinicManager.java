@@ -1,9 +1,5 @@
 package projecttwo;
 import projectone.*;
-////////delete java.util after List class is done, these are just for test//////////
-import java.util.ArrayList;
-import java.util.List;
-////////////////////////////////////////////////////////////////////////////////////
 
 /////Necessary Lib class to read from file/////
 import java.io.File;  // Import the File class
@@ -15,8 +11,8 @@ import java.util.Calendar;
 
 public class ClinicManager {
 
-    private List<Provider> providerList = new ArrayList<Provider>();
-    private List<Appointment> AppointmentList = new ArrayList<>();
+    private List<Provider> providerList = new List<Provider>();
+    private List<Appointment> AppointmentList = new List<Appointment>();
     private boolean ProgrammeRunner = true;
 
     /**
@@ -41,12 +37,11 @@ public class ClinicManager {
      * @param CommandLine
      */
     void readCommand(String CommandLine){
+      if(CommandLine.isBlank()){return;}
+
       String[] Command_Seped = CommandLine.split(",");
-      
       //if NO INPUT
-      if(CommandLine.length() < 1 || Command_Seped.length < 1){
-        return;
-      }
+      if(CommandLine.length() < 1 || Command_Seped.length < 1){return;}
 
       switch (Command_Seped[0]) {
         case "D":
@@ -55,6 +50,9 @@ public class ClinicManager {
         case "Q":
           ProgrammeRunner = false;
           break;
+        case "T":
+          scheduleAppointment_Imaging(CommandLine);
+          break;
         default:
         System.out.println("Invalid Command");
           break;
@@ -62,18 +60,47 @@ public class ClinicManager {
 
     }
 
-
+    /**
+     * read and decode all the info from string with command schedule Imaging
+     * @param CommandLine
+     */
+    void scheduleAppointment_Imaging(String CommandLine){
+      final int ProperCommandLine_Length = 7;
+      String[] CommandLine_Sp = CommandLine.split(",");
+      //check length
+      if(CommandLine_Sp.length != ProperCommandLine_Length){System.out.println("Missing date tokens."); return;}
+      //check appointmentDate
+      Date AppointmentDate = generateDate_FromString(CommandLine_Sp[1]);
+      if(AppointmentDate == null){System.out.println(CommandLine_Sp[1] + " is not a valid calendar date"); return;}
+      //check timeslot
+      Timeslot timeslot = generateTimeSlot_ByIndex(CommandLine_Sp[2]);
+      if(timeslot == null){System.out.println(CommandLine_Sp[2] + " is not a valid Timeslot.");return;}
+      //check PatientDob
+      Date PatientDob = generateDate_FromString(CommandLine_Sp[5]);
+      if(PatientDob == null){System.out.println("Patient dob: " + CommandLine_Sp[5] + " is not a valid calendar date");return;}
+      //check patient
+      Patient patient = generatePatient_ByString(CommandLine_Sp[3], CommandLine_Sp[4], PatientDob);
+      if(patient == null){return;}
+      //check radiology
+      Radiology radio = generateRadiology_ByString(CommandLine_Sp[6]);
+      if(radio == null){System.out.println(CommandLine_Sp[6] + " - imaging service not provided.");return;}
+      //get technician
+      Technician technician = generatePossibleTechnician(AppointmentDate, timeslot);
+      if(technician == null){System.out.println("Cannot find an available technician at all locations for " + CommandLine_Sp[6] + "at slot " + CommandLine_Sp[2]);return;}
+      //final check
+      scheduleAppointment_finalCheck(new Imaging(AppointmentDate, timeslot, patient, technician, radio));
+    }
 
     /**
      * read and decode all the info from string with command schedule doctor
      * @param CommandLine
      */
     void scheduleAppointment_Doctor(String CommandLine){
-      final int ProperCommandLine_Length = 6;
+      final int ProperCommandLine_Length = 7;
       String[] CommandLine_Sp = CommandLine.split(",");
       //check length
       if(CommandLine_Sp.length != ProperCommandLine_Length){
-        System.out.println("Invalid Command: " + CommandLine);
+        System.out.println("Missing date tokens.");
         return;
       }
       //check appointmentDate
@@ -91,7 +118,7 @@ public class ClinicManager {
       //check PatientDob
       Date PatientDob = generateDate_FromString(CommandLine_Sp[5]);
       if(PatientDob == null){
-        System.out.println(CommandLine_Sp[1] + " is not a valid calendar date");
+        System.out.println("Patient dob: " + CommandLine_Sp[5] + " is not a valid calendar date");
         return;
       }
       //check patient
@@ -114,17 +141,33 @@ public class ClinicManager {
      */
     void scheduleAppointment_finalCheck(Appointment appointment){
 
+      //System.out.println("Pass first check");
+      //check if date is valid in calendar
       if(!checkvalidAppointmentDate_Calendar(appointment.getDate())){
         return;
       }
 
+      //check if appointment is conflict
+      if(!checkvalidAppointment_Conflict(appointment)){
+        return;
+      }
+
       AppointmentList.add(appointment);
+      System.out.println(appointment.toString() + " booked.");
     }
 
-
-
+    /**
+     * check if the appointment date is valid in calendar(not check conflict)
+     * @param TargetDate
+     * @return true if date is valid in calendar, false else
+     */
     private boolean checkvalidAppointmentDate_Calendar(Date TargetDate){
 
+      //check date is possible in calendar
+      if(!TargetDate.isValid()){
+        System.out.println("Appointment date: " + TargetDate.toString() + " is not a valid calendar date.");
+        return false;
+      }
       //check if is befor or today
       if(TargetDate.compareTo(getSystemDate(0,0,0)) == 0 || TargetDate.compareTo(getSystemDate(0,0,0)) == -1){
         System.out.println("Appointment date: " + TargetDate.toString() + " is today or a date before today.");
@@ -132,7 +175,7 @@ public class ClinicManager {
       } 
       
       //check if is in six month
-      if(TargetDate.compareTo(getSystemDate(6,0,0)) == -1){
+      if(TargetDate.compareTo(getSystemDate(6,0,0)) == 1){
         System.out.println("Appointment date: " + TargetDate.toString() + " is not within six months.");
         return false;
       }
@@ -154,8 +197,27 @@ public class ClinicManager {
       return true;
     }
 
+    /**
+     * check if Appointment is conflict with exist appointment, it will iterate through the list and check one by one
+     * @param TargetApp
+     * @return true if no conflict, false else
+     */
+    private boolean checkvalidAppointment_Conflict(Appointment TargetApp){
 
+      for (Appointment app : AppointmentList) {
+        if(app.checkAppointmentConflict_Provider(TargetApp)){
+          System.out.println(TargetApp.toString() + " is conflict");
+          return false;
+        }
 
+        if(app.checkAppointmentConflict_Patient(TargetApp)){
+          System.out.println(TargetApp.getPatient().toString() + " has an existing appointment at the same time slot.");
+          return false;
+        }
+      }
+
+      return true;
+    }
 
     /**
      * Pre load neccessary data for programme
@@ -255,7 +317,12 @@ public class ClinicManager {
 
       Date date = new Date(month, day, year);
 
-      return date;
+      if(date.isValid()){
+        return date;
+      }else{
+        return null;
+      }
+
     }
 
     /**
@@ -264,6 +331,9 @@ public class ClinicManager {
      * @return location ENUM if exist, return null else
      */
     private Location generateLocation_FromString(String Location_String){
+
+      Location_String = Location_String.trim();
+
       for(Location loc_iterator : Location.values()){
         if(loc_iterator.name().toLowerCase().equals(Location_String.toLowerCase())){
           return loc_iterator;
@@ -279,6 +349,9 @@ public class ClinicManager {
      * @return Specialty ENUM if exist, return null else.
      */
     private Specialty getSpecialty_FromString(String Specialty_String){
+
+      Specialty_String = Specialty_String.trim();
+
       for(Specialty spe_iterator : Specialty.values()){
         if(spe_iterator.name().toLowerCase().equals(Specialty_String.toLowerCase())){
           return spe_iterator;
@@ -395,9 +468,60 @@ public class ClinicManager {
       return new Date(calndr.get(Calendar.MONTH), calndr.get(Calendar.DAY_OF_MONTH), calndr.get(Calendar.YEAR));
     }
     
+    /**
+     * get radiology from string
+     * @param Radio_String
+     * @return radiology class if founded, return null else.
+     */
+    private Radiology generateRadiology_ByString(String Radio_String){
+
+      Radio_String = Radio_String.trim();
+
+      for(Radiology rad : Radiology.values()){
+        if(Radio_String.toLowerCase().equals(rad.name().toLowerCase())){
+          return rad;
+        }
+      }
+
+      return null;
+    }
     
+    /**
+     * generate valid technician from providerList
+     * @param date
+     * @param timeslot
+     * @return return possible technician, return null if not found
+     */
+    private Technician generatePossibleTechnician(Date date, Timeslot timeslot){
+      for (Provider provider : providerList) {
+        if(provider instanceof Technician){
+          if(checkTechnicianValid(date, timeslot, (Technician)provider)){
+            return (Technician)provider;
+          }
+        }
+      }
+
+      return null;
+    }
     
-    
+    /**
+     * check if a technician is valid
+     * @param date
+     * @param timeslot
+     * @param tech
+     * @return return true if technician is valid, return false else
+     */
+    private boolean checkTechnicianValid(Date date, Timeslot timeslot, Technician tech){
+      for (Appointment appointment : AppointmentList) {
+        if(appointment instanceof Imaging){
+          Imaging imag_app = (Imaging)appointment;
+          if(imag_app.checkAppointmentConflict(date, timeslot, tech)){
+            return false;
+          }
+        }
+      }
+      return true;
+    }
     /*
     public static void main(String[] args){
       Date da = new Date(10, 16, 2001);

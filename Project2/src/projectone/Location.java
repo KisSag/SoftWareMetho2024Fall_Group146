@@ -29,6 +29,10 @@ public enum Location {
         return Zip;
     }
 
+    @Override public String toString(){
+        return this.name() + ", " + Country + " " + Zip;
+    }
+
     public static void main(String[] args) {
             //Test case 1: Verify country for BRIDGEWATER
             System.out.println("Test case 1: " + Location.BRIDGEWATER.getCountry()); // Expected output: "Somerset"

@@ -92,7 +92,7 @@ public class Patient extends Person {
     @Override public String toString(){
         String result = "";
         result += profile.getFirstName() + " " + profile.getLastName() + " " + profile.getBirthDay().toString() + " ";
-        result += "[Amount due: $" + Float.toString(charge()) + "]";
+        //result += "[Amount due: $" + Float.toString(charge()) + "]";
         return result;
     }
 
