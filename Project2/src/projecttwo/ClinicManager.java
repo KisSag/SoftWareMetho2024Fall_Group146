@@ -66,6 +66,7 @@ public class ClinicManager {
         case "PS":
           calculateBill();
           break;
+        case "PI": break;
         default:
         System.out.println("Invalid Command");
           break;
@@ -275,6 +276,46 @@ public class ClinicManager {
         AppointmentList = new List<Appointment>();
     }
     
+    /**
+     * display the imaging appointment
+     */
+    void displayAppointment_Imaging(){
+      List<Imaging> Appointment_Filted = new List<Imaging>();
+      for(Appointment app : AppointmentList){
+        if(app instanceof Imaging){
+          Appointment_Filted.add((Imaging)app);
+        }
+      }
+
+
+      System.out.println("** List of radiology appointments ordered by county/date/time. **");
+      for(Imaging ima : Appointment_Filted){
+        System.out.println(ima.toString());
+      }
+      System.out.println("** end of list **");
+
+      
+    }
+
+    /**
+     * display the office appointment
+     */
+    void displayAppointment_Office(){
+      List<Appointment> Appointment_Filted = new List<Appointment>();
+      for(Appointment app : AppointmentList){
+        if(!(app instanceof Imaging)){
+          Appointment_Filted.add(app);
+        }
+      }
+
+
+      System.out.println("** List of office appointments ordered by county/date/time. **");
+      for(Appointment app : Appointment_Filted){
+        System.out.println(app.toString());
+      }
+      System.out.println("** end of list **");
+    }
+
     /**
      * finale check if an appointment is able to add into appointment List.
      * @param appointment

@@ -95,20 +95,4 @@ public class Patient extends Person {
         //result += "[Amount due: $" + Float.toString(charge()) + "]";
         return result;
     }
-
-    /* this is test for project 1
-    public static void main(String[] args) {
-        Profile profile1 = new Profile("Jayden", "Hsu", new Date(1, 1, 1990));
-        Appointment appointment1 = new Appointment(new Date(11, 21, 2024), Timeslot.SLOT1, profile1, Provider.PATEL);
-        Patient patient = new Patient(appointment1);
-
-        //Test case 1: Get profile of patient
-        System.out.println("Test case 1: " + patient.getProfile().getFirstName()); //Expected: Jayden
-
-        //Test case 2: Add finished appointment
-        patient.addFinishedAppointment(appointment1);
-        System.out.println("Test case 2: First finished visit: " + patient.getFirstFinihedVisit().getCurrentAppointment().getDate()); //Expected: 11/21/2024
-    }
-    */
-    
 }
