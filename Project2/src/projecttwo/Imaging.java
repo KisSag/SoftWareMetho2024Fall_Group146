@@ -18,11 +18,24 @@ public class Imaging extends Appointment {
         return this.room;
     }
 
-    
-    public boolean checkAppointmentConflict(Date date, Timeslot slot, Technician tech){
+    /**
+     * check if imaging is conflict with current imaging
+     * @param date
+     * @param slot
+     * @param tech
+     * @param rad
+     * @return return true of conflict, false else
+     */
+    public boolean checkAppointmentConflict(Date date, Timeslot slot, Technician tech, Radiology rad){
         if(getProvider().equals(tech) && getDate().equals(date) && getTimeslot().equals(slot)){
             return true;
         }
+
+        Provider convertedProvider = (Technician)getProvider();
+        if(getDate().equals(date) && getTimeslot().equals(slot) && getRoom().equals(rad) && convertedProvider.getLocation().equals(tech.getLocation())){
+            return true;
+        }
+
         return false;
     }
 

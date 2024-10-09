@@ -101,6 +101,20 @@ public class Appointment implements Comparable<Appointment>{
         return false;
     }
 
+    /**
+     * check if given condition is satisfy current appointment
+     * @param patient
+     * @param date
+     * @param timeslot
+     * @return return true if all satisfy, return false else
+     */
+    public boolean findAppointment(Patient patient, Date date, Timeslot timeslot){
+        if(getPatient().equals(patient) && getDate().equals(date) && getTimeslot().equals(timeslot)){
+            return true;
+        }
+        return false;
+    }
+
     @Override public String toString(){
         String result = "";
         result += date.toString() + " ";

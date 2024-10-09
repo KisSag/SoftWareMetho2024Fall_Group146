@@ -53,6 +53,12 @@ public class ClinicManager {
         case "T":
           scheduleAppointment_Imaging(CommandLine);
           break;
+        case "C":
+          cancelAppointment(CommandLine);
+          break;
+        case "R":
+          rescheduleAppointment(CommandLine);
+          break;
         default:
         System.out.println("Invalid Command");
           break;
@@ -85,7 +91,7 @@ public class ClinicManager {
       Radiology radio = generateRadiology_ByString(CommandLine_Sp[6]);
       if(radio == null){System.out.println(CommandLine_Sp[6] + " - imaging service not provided.");return;}
       //get technician
-      Technician technician = generatePossibleTechnician(AppointmentDate, timeslot);
+      Technician technician = generatePossibleTechnician(AppointmentDate, timeslot, radio);
       if(technician == null){System.out.println("Cannot find an available technician at all locations for " + CommandLine_Sp[6] + "at slot " + CommandLine_Sp[2]);return;}
       //final check
       scheduleAppointment_finalCheck(new Imaging(AppointmentDate, timeslot, patient, technician, radio));
@@ -136,12 +142,91 @@ public class ClinicManager {
     }
 
     /**
+     * try to cancel a appointment
+     * @param CommandLine
+     */
+    void cancelAppointment(String CommandLine){
+      final int ProperCommandLine_Length = 6;
+      String[] CommandLine_Sp = CommandLine.split(",");
+      //check length
+      if(CommandLine_Sp.length != ProperCommandLine_Length){
+        System.out.println("Missing date tokens.");
+        return;
+      }
+      //check appointmentDate
+      Date AppointmentDate = generateDate_FromString(CommandLine_Sp[1]);
+      if(AppointmentDate == null){
+        System.out.println(CommandLine_Sp[1] + " is not a valid calendar date");
+        return;
+      }
+      //check timeslot
+      Timeslot timeslot = generateTimeSlot_ByIndex(CommandLine_Sp[2]);
+      if(timeslot == null){
+        System.out.println(CommandLine_Sp[2] + " is not a valid Timeslot.");
+        return;
+      }
+      //check PatientDob
+      Date PatientDob = generateDate_FromString(CommandLine_Sp[5]);
+      if(PatientDob == null){
+        System.out.println("Patient dob: " + CommandLine_Sp[5] + " is not a valid calendar date");
+        return;
+      }
+      //check patient
+      Patient patient = generatePatient_ByString(CommandLine_Sp[3], CommandLine_Sp[4], PatientDob);
+      if(patient == null){
+        return;
+      }
+      //find appointment
+      Appointment TargetAppontment = findAppointment(patient, AppointmentDate, timeslot);
+      if(TargetAppontment == null){
+        System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment does not exist.");
+        return;
+      }
+      AppointmentList.remove(TargetAppontment);
+      System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment has been canceled.");
+    }
+
+    /**
+     * try to reschedule a appointment
+     * @param CommandLine
+     */
+    void rescheduleAppointment(String CommandLine){
+      final int ProperCommandLine_Length = 7;
+      String[] CommandLine_Sp = CommandLine.split(",");
+      //check length
+      if(CommandLine_Sp.length != ProperCommandLine_Length){
+        System.out.println("Missing date tokens.");
+        return;
+      }
+      //check appointmentDate
+      Date AppointmentDate = generateDate_FromString(CommandLine_Sp[1]);
+      if(AppointmentDate == null){System.out.println(CommandLine_Sp[1] + " is not a valid calendar date"); return;}
+      //check timeslot
+      Timeslot timeslot = generateTimeSlot_ByIndex(CommandLine_Sp[2]);
+      if(timeslot == null){System.out.println(CommandLine_Sp[2] + " is not a valid Timeslot.");return;}
+      //check PatientDob
+      Date PatientDob = generateDate_FromString(CommandLine_Sp[5]);
+      if(PatientDob == null){System.out.println("Patient dob: " + CommandLine_Sp[5] + " is not a valid calendar date");return;}
+      //check patient
+      Patient patient = generatePatient_ByString(CommandLine_Sp[3], CommandLine_Sp[4], PatientDob);
+      if(patient == null){return;}
+      //find appointment
+      Appointment TargetAppontment = findAppointment(patient, AppointmentDate, timeslot);
+      if(TargetAppontment == null){System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment does not exist.");return;}
+      //get new Timeslot
+      Timeslot timeslot_new = generateTimeSlot_ByIndex(CommandLine_Sp[6]);
+      if(timeslot_new == null){System.out.println(CommandLine_Sp[6] + " is not a valid Timeslot.");return;}
+      //schedule new appointment
+      Appointment modifiedAppointment =  new Appointment(TargetAppontment.getDate(), timeslot_new, TargetAppontment.getPatient(), TargetAppontment.getProvider());
+      scheduleAppointment_finalCheck(modifiedAppointment);
+    }
+
+    /**
      * finale check if an appointment is able to add into appointment List.
      * @param appointment
      */
     void scheduleAppointment_finalCheck(Appointment appointment){
 
-      //System.out.println("Pass first check");
       //check if date is valid in calendar
       if(!checkvalidAppointmentDate_Calendar(appointment.getDate())){
         return;
@@ -490,12 +575,13 @@ public class ClinicManager {
      * generate valid technician from providerList
      * @param date
      * @param timeslot
+     * @param rad
      * @return return possible technician, return null if not found
      */
-    private Technician generatePossibleTechnician(Date date, Timeslot timeslot){
+    private Technician generatePossibleTechnician(Date date, Timeslot timeslot, Radiology rad){
       for (Provider provider : providerList) {
         if(provider instanceof Technician){
-          if(checkTechnicianValid(date, timeslot, (Technician)provider)){
+          if(checkTechnicianValid(date, timeslot, (Technician)provider, rad)){
             return (Technician)provider;
           }
         }
@@ -509,18 +595,35 @@ public class ClinicManager {
      * @param date
      * @param timeslot
      * @param tech
+     * @param rad
      * @return return true if technician is valid, return false else
      */
-    private boolean checkTechnicianValid(Date date, Timeslot timeslot, Technician tech){
+    private boolean checkTechnicianValid(Date date, Timeslot timeslot, Technician tech, Radiology rad){
       for (Appointment appointment : AppointmentList) {
         if(appointment instanceof Imaging){
           Imaging imag_app = (Imaging)appointment;
-          if(imag_app.checkAppointmentConflict(date, timeslot, tech)){
+          if(imag_app.checkAppointmentConflict(date, timeslot, tech, rad)){
             return false;
           }
         }
       }
       return true;
+    }
+
+    /**
+     * find appointment with given condition
+     * @param pa
+     * @param da
+     * @param ts
+     * @return return appointment class if founded, return null else.
+     */
+    private Appointment findAppointment(Patient pa, Date da, Timeslot ts){
+      for(Appointment app : AppointmentList){
+        if(app.findAppointment(pa, da, ts)){
+          return app;
+        }
+      }
+      return null;
     }
     /*
     public static void main(String[] args){
