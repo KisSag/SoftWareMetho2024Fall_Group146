@@ -26,6 +26,12 @@ public class Technician extends Provider {
         return ratePerVisit;
     }
 
+    @Override public int getPrice(){
+        return ratePerVisit;
+    }
+    @Override public void changeCredit(int scaler){
+        Credit += scaler * ratePerVisit;
+    }
     @Override public int rate() {
         return -1;
     }

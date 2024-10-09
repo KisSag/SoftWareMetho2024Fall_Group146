@@ -51,6 +51,13 @@ public class Doctor extends Provider {
     public Location getLocation(){
         return location;
     }
+
+    @Override public void changeCredit(int scaler){
+        Credit += scaler * specialty.getCharge();
+    }
+    @Override public int getPrice(){
+        return specialty.getCharge();
+    }
     @Override public int rate() {
         return -1;
     }

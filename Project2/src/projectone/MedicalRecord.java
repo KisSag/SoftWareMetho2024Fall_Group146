@@ -1,4 +1,5 @@
 package projectone;
+import projecttwo.*;
 
 /**
  * Last Modified: 9/29/2024
@@ -33,6 +34,16 @@ public class MedicalRecord {
             patients[TargetIndex].addFinishedAppointment(appointment);
         }
 
+    }
+
+    /**
+     * add whole appointmentList
+     * @param appointmentList
+     */
+    public void add(List<Appointment> appointmentList){
+        for(Appointment app : appointmentList){
+            add(app);
+        }
     }
 
     /**

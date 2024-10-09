@@ -13,6 +13,7 @@ public class ClinicManager {
 
     private List<Provider> providerList = new List<Provider>();
     private List<Appointment> AppointmentList = new List<Appointment>();
+    private static MedicalRecord medicalRecord = new MedicalRecord();
     private boolean ProgrammeRunner = true;
 
     /**
@@ -59,6 +60,12 @@ public class ClinicManager {
         case "R":
           rescheduleAppointment(CommandLine);
           break;
+        case "PC":
+          printProviderCredit();
+          break;
+        case "PS":
+          calculateBill();
+          break;
         default:
         System.out.println("Invalid Command");
           break;
@@ -94,7 +101,10 @@ public class ClinicManager {
       Technician technician = generatePossibleTechnician(AppointmentDate, timeslot, radio);
       if(technician == null){System.out.println("Cannot find an available technician at all locations for " + CommandLine_Sp[6] + "at slot " + CommandLine_Sp[2]);return;}
       //final check
-      scheduleAppointment_finalCheck(new Imaging(AppointmentDate, timeslot, patient, technician, radio));
+      Appointment finalcheckAppointment = scheduleAppointment_finalCheck(new Imaging(AppointmentDate, timeslot, patient, technician, radio));
+      if(finalcheckAppointment != null){
+        System.out.println(finalcheckAppointment.toString() + " booked.");
+      }
     }
 
     /**
@@ -137,8 +147,9 @@ public class ClinicManager {
       if(doc == null){
         return;
       }
-      
-      scheduleAppointment_finalCheck(new Appointment(AppointmentDate, timeslot, patient, doc));
+      //final check
+      Appointment finalcheckAppointment = scheduleAppointment_finalCheck(new Appointment(AppointmentDate, timeslot, patient, doc));
+      if(finalcheckAppointment != null){System.out.println(finalcheckAppointment.toString() + " booked.");}
     }
 
     /**
@@ -173,9 +184,7 @@ public class ClinicManager {
       }
       //check patient
       Patient patient = generatePatient_ByString(CommandLine_Sp[3], CommandLine_Sp[4], PatientDob);
-      if(patient == null){
-        return;
-      }
+      if(patient == null){return;}
       //find appointment
       Appointment TargetAppontment = findAppointment(patient, AppointmentDate, timeslot);
       if(TargetAppontment == null){
@@ -183,6 +192,8 @@ public class ClinicManager {
         return;
       }
       AppointmentList.remove(TargetAppontment);
+      Provider provider = (Provider)TargetAppontment.getProvider();
+      provider.changeCredit(-1);
       System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment has been canceled.");
     }
 
@@ -217,28 +228,77 @@ public class ClinicManager {
       Timeslot timeslot_new = generateTimeSlot_ByIndex(CommandLine_Sp[6]);
       if(timeslot_new == null){System.out.println(CommandLine_Sp[6] + " is not a valid Timeslot.");return;}
       //schedule new appointment
-      Appointment modifiedAppointment =  new Appointment(TargetAppontment.getDate(), timeslot_new, TargetAppontment.getPatient(), TargetAppontment.getProvider());
-      scheduleAppointment_finalCheck(modifiedAppointment);
+      Appointment modifiedAppointment = new Appointment(TargetAppontment.getDate(), timeslot_new, TargetAppontment.getPatient(), TargetAppontment.getProvider());
+      //cancel old appointment
+      Appointment finalcheckAppointment = scheduleAppointment_finalCheck(modifiedAppointment);
+      if(finalcheckAppointment != null){AppointmentList.remove(TargetAppontment); Provider pro = (Provider)TargetAppontment.getProvider(); pro.changeCredit(-1); System.out.println("Rescheduled to " + finalcheckAppointment.toString());}
     }
 
+    /**
+     * print providerCredit
+     */
+    void printProviderCredit(){
+      System.out.println("** Credit amount ordered by provider. **");
+      int providerIndex = 0;
+      for(Provider pro : providerList){
+        String output = "(" + Integer.toString(providerIndex) + ") " + pro.getProfile().toString() + " [Credit amount: $" + Integer.toString(pro.getCredit()) + ".00]";
+        System.out.println(output);
+        providerIndex += 1;
+      }
+      System.out.println("** end of list **");
+    }
+
+    /**
+     * calculate all the bill for patient and remove ALL appointment
+     */
+    void calculateBill(){
+      if(AppointmentList.size() != 0){
+        medicalRecord.add(AppointmentList);
+      }
+
+      Patient[] PatientList = medicalRecord.getPatientsList();
+
+        if(PatientList == null || PatientList.length == 0){
+            System.out.println("No Medical Record");
+            return;
+        }
+
+        System.out.println("** Billing statement **");
+        for(int i = 0; i < PatientList.length; i += 1){
+            if(PatientList[i] == null){
+                continue;
+            }
+        System.out.println("(" +Integer.toString(i + 1) +  ") " + PatientList[i].toString() + " [due: $" + PatientList[i].charge() + ".00]");
+            
+        }
+        System.out.println("** End of List **");
+        AppointmentList = new List<Appointment>();
+    }
+    
     /**
      * finale check if an appointment is able to add into appointment List.
      * @param appointment
      */
-    void scheduleAppointment_finalCheck(Appointment appointment){
+    Appointment scheduleAppointment_finalCheck(Appointment appointment){
 
       //check if date is valid in calendar
       if(!checkvalidAppointmentDate_Calendar(appointment.getDate())){
-        return;
+        return null;
       }
 
       //check if appointment is conflict
       if(!checkvalidAppointment_Conflict(appointment)){
-        return;
+        return null;
       }
 
       AppointmentList.add(appointment);
-      System.out.println(appointment.toString() + " booked.");
+      
+      //change potential credit for provider
+      Provider provider = (Provider)appointment.getProvider();
+      provider.changeCredit(1);
+
+      
+      return appointment;
     }
 
     /**
@@ -625,6 +685,8 @@ public class ClinicManager {
       }
       return null;
     }
+
+
     /*
     public static void main(String[] args){
       Date da = new Date(10, 16, 2001);

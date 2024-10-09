@@ -41,7 +41,7 @@ public class Patient extends Person {
 
         while(VisitRunner != null){
             Provider provider = (Provider)VisitRunner.getCurrentAppointment().getProvider();
-            FinialCharge += provider.rate();
+            FinialCharge += provider.getPrice();
             VisitRunner = VisitRunner.getNextFinishedVisit();
         }
 

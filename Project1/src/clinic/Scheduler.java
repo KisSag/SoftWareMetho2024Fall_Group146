@@ -273,7 +273,7 @@ public class Scheduler {
     }
     
     void calculateBill(){
-        AppointmentList.setMedicalRecord(medicalRecord);
+
         Patient[] PatientList = medicalRecord.getPatientsList();
 
         if(PatientList == null || PatientList.length == 0){

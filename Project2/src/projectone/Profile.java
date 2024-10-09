@@ -67,7 +67,7 @@ public class Profile implements Comparable<Profile>{
     }
     @Override public boolean equals(Object other){
         Profile TargetProfile = (Profile)other;
-        if(TargetProfile.getFirstName().equals(this.getFirstName()) && TargetProfile.getLastName().equals(this.getLastName()) && this.DateOfBirth.equals(TargetProfile.getBirthDay())){
+        if(TargetProfile.getFirstName().equalsIgnoreCase(this.getFirstName()) && TargetProfile.getLastName().equalsIgnoreCase(this.getLastName()) && this.DateOfBirth.equals(TargetProfile.getBirthDay())){
             return true;
         }
         return false;
