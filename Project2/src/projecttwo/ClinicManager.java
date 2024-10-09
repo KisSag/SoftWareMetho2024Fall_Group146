@@ -315,7 +315,7 @@ public class ClinicManager {
       }
       System.out.println("** end of list **");
     }
-
+    
     /**
      * finale check if an appointment is able to add into appointment List.
      * @param appointment
