@@ -10,6 +10,7 @@ public class List<E> implements Iterable<E> {
     private int size; // Number of elements in the list
 
     // Constructor
+    @SuppressWarnings("unchecked")
     public List() {
         elements = (E[]) new Object[INITIAL_CAPACITY];
         size = 0;

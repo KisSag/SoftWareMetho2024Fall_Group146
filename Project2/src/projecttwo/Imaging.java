@@ -27,12 +27,15 @@ public class Imaging extends Appointment {
      * @return return true of conflict, false else
      */
     public boolean checkAppointmentConflict(Date date, Timeslot slot, Technician tech, Radiology rad){
+        //System.out.println("Checking:" + tech.toString());
         if(getProvider().equals(tech) && getDate().equals(date) && getTimeslot().equals(slot)){
+            //System.out.println("failed 1");
             return true;
         }
 
         Provider convertedProvider = (Technician)getProvider();
         if(getDate().equals(date) && getTimeslot().equals(slot) && getRoom().equals(rad) && convertedProvider.getLocation().equals(tech.getLocation())){
+            //System.out.println("failed 2");
             return true;
         }
 

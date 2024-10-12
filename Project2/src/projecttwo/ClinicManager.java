@@ -13,6 +13,7 @@ public class ClinicManager {
 
     private List<Provider> providerList = new List<Provider>();
     private List<Appointment> AppointmentList = new List<Appointment>();
+    private TechnicianRotator technicianRotator;
     private static MedicalRecord medicalRecord = new MedicalRecord();
     private boolean ProgrammeRunner = true;
 
@@ -45,31 +46,16 @@ public class ClinicManager {
       if(CommandLine.length() < 1 || Command_Seped.length < 1){return;}
 
       switch (Command_Seped[0]) {
-        case "D":
-          scheduleAppointment_Doctor(CommandLine);
-          break;
-        case "Q":
-          ProgrammeRunner = false;
-          break;
-        case "T":
-          scheduleAppointment_Imaging(CommandLine);
-          break;
-        case "C":
-          cancelAppointment(CommandLine);
-          break;
-        case "R":
-          rescheduleAppointment(CommandLine);
-          break;
-        case "PC":
-          printProviderCredit();
-          break;
-        case "PS":
-          calculateBill();
-          break;
-        case "PI": break;
-        default:
-        System.out.println("Invalid Command");
-          break;
+        case "D":scheduleAppointment_Doctor(CommandLine);break;
+        case "Q":ProgrammeRunner = false;break;
+        case "T":scheduleAppointment_Imaging(CommandLine);break;
+        case "C":cancelAppointment(CommandLine);break;
+        case "R":rescheduleAppointment(CommandLine);break;
+        case "PC":printProviderCredit();break;
+        case "PS":calculateBill();break;
+        case "PI": displayAppointment_Imaging(); break;
+        case "PO": displayAppointment_Office(); break;
+        default:System.out.println("Invalid Command");break;
       }
 
     }
@@ -228,6 +214,7 @@ public class ClinicManager {
       //get new Timeslot
       Timeslot timeslot_new = generateTimeSlot_ByIndex(CommandLine_Sp[6]);
       if(timeslot_new == null){System.out.println(CommandLine_Sp[6] + " is not a valid Timeslot.");return;}
+      //find new imag
       //schedule new appointment
       Appointment modifiedAppointment = new Appointment(TargetAppontment.getDate(), timeslot_new, TargetAppontment.getPatient(), TargetAppontment.getProvider());
       //cancel old appointment
@@ -337,7 +324,9 @@ public class ClinicManager {
       //change potential credit for provider
       Provider provider = (Provider)appointment.getProvider();
       provider.changeCredit(1);
-
+      if(appointment instanceof Imaging){
+        technicianRotator.jumpNext();
+      }
       
       return appointment;
     }
@@ -410,6 +399,7 @@ public class ClinicManager {
      */
     private void initializePreLoadData(){
       readProvider_FromFile();
+      technicianRotator = new TechnicianRotator(providerList);
     }
 
     /**
@@ -680,14 +670,25 @@ public class ClinicManager {
      * @return return possible technician, return null if not found
      */
     private Technician generatePossibleTechnician(Date date, Timeslot timeslot, Radiology rad){
-      for (Provider provider : providerList) {
-        if(provider instanceof Technician){
-          if(checkTechnicianValid(date, timeslot, (Technician)provider, rad)){
-            return (Technician)provider;
-          }
-        }
+
+      Technician init = technicianRotator.getTechnician();
+      if(checkTechnicianValid(date, timeslot, init, rad)){
+        return init;
       }
 
+      technicianRotator.jumpNext();
+
+      while(technicianRotator.getTechnician() != init){
+
+        if(checkTechnicianValid(date, timeslot, technicianRotator.getTechnician(), rad)){
+          init = technicianRotator.getTechnician();
+          //System.out.println("good: " + init.toString());
+          return init;
+        }else{
+          technicianRotator.jumpNext();
+        }
+
+      }
       return null;
     }
     
