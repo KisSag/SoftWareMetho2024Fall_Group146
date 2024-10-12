@@ -55,6 +55,7 @@ public class List<E> implements Iterable<E> {
     }
 
     // Private method to grow the capacity of the list
+    @SuppressWarnings("unchecked")
     private void grow() {
         E[] newElements = (E[]) new Object[elements.length + CAPACITY_INCREMENT];
         System.arraycopy(elements, 0, newElements, 0, size);
