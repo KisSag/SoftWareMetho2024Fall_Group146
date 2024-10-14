@@ -27,7 +27,6 @@ public class TechnicianRotator {
         for(Provider p : providerList){
             if(p instanceof Technician){
                 TechnicianList[TechnicianList.length - index] = (Technician)p;
-                System.out.println(TechnicianList[TechnicianList.length - index].toString());
                 index += 1;
             }
         }
@@ -65,5 +64,11 @@ public class TechnicianRotator {
         }
     }
 
-
+    /**
+     * get List of Technician List
+     * @return return Technician List
+     */
+    public Technician[] getTechnicianList(){
+        return TechnicianList;
+    }
 }

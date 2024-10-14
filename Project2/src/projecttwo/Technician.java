@@ -47,6 +47,6 @@ public class Technician extends Provider {
         return this.profile.equals(TargetDoctor.getProfile());
     }
     @Override public String toString(){
-        return profile.toString() + location.toString() + Integer.toString(ratePerVisit);
+        return "[" + profile.toString() + ", "+ location.toString() + "] [rate: $" + Integer.toString(ratePerVisit) + "]";
     }
 }

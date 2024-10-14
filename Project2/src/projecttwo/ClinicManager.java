@@ -23,15 +23,16 @@ public class ClinicManager {
     public void run(){
 
       initializePreLoadData();
-
+      printProviderInfo();
+      
       Scanner CommandScanner = new Scanner(System.in);
-        System.out.println("Scheduler is running.");
+        System.out.println("\nClinic Manager is running.");
         while(ProgrammeRunner){
             readCommand(CommandScanner.nextLine());
         }
 
         CommandScanner.close();
-        System.out.println("Scheduler terminated");
+        System.out.println("Clinic Manager terminated");
     }
 
     /**
@@ -400,6 +401,28 @@ public class ClinicManager {
     private void initializePreLoadData(){
       readProvider_FromFile();
       technicianRotator = new TechnicianRotator(providerList);
+    }
+
+    /**
+     * print preload Info of Provider List
+     */
+    private void printProviderInfo(){
+      System.out.println("Providers loaded to the list.");
+      for(Provider pro : providerList){
+        System.out.println(pro.toString());
+      }
+
+      System.out.println("\nRotation list for the technicians.");
+      String tech_Result = "";
+      for(int i = 0; i < technicianRotator.getTechnicianList().length; i += 1){
+        if(i != 0){
+          tech_Result += " --> ";
+        }
+
+        tech_Result += technicianRotator.getTechnicianList()[i].getProfile().getFirstName() + " " +technicianRotator.getTechnicianList()[i].getProfile().getLastName() + " (" + technicianRotator.getTechnicianList()[i].getLocation().name() + ")";
+      }
+
+      System.out.println(tech_Result);
     }
 
     /**
