@@ -70,6 +70,14 @@ public class List<E> implements Iterable<E> {
         return elements[index];
     }
 
+    // Set method to replace element at a specific index
+    public void set(int index, E e) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+        elements[index] = e;
+    }
+
     // Return the current size of the list
     public int size() {
         return size;
