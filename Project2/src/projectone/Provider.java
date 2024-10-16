@@ -1,35 +1,44 @@
 package projectone;
 import projecttwo.Person;
 
-public abstract class Provider extends Person{
+/**
+ * {@code @author:} Tianxiang Huang
+ */
+public abstract class Provider extends Person {
     protected Location location;
     protected int Credit;
+
     /**
-     * get provider's location
-     * @return return provider's location.
+     * Get provider's location.
+     * @return Provider's location.
      */
-    public Location getLocation(){
+    public Location getLocation() {
         return location;
     }
+
     /**
-     * get provider's credit
-     * @return return credit
+     * Get provider's credit.
+     * @return Provider's credit.
      */
-    public int getCredit(){
+    public int getCredit() {
         return Credit;
     }
 
     /**
-     * change Provider's credit
-     * @param amount
+     * Change provider's credit.
+     * @param scaler The amount to change the credit by
      */
     public abstract void changeCredit(int scaler);
-    
+
     /**
-     * get price per visit of provider
-     * @return price ver visit
+     * Get the price per visit of the provider.
+     * @return Price per visit
      */
     public abstract int getPrice();
 
+    /**
+     * Rate the provider.
+     * @return Rating of the provider
+     */
     public abstract int rate();
 }

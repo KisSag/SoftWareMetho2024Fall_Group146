@@ -1,78 +1,116 @@
 package projecttwo;
 import projectone.*;
 
+/**
+ * {@code @author:} Tianxiang Huang
+ */
 public class Doctor extends Provider {
-
     private Specialty specialty;
-    private String npi; 
+    private String npi;
 
     /**
-     * constructor
-     * @param pro
-     * @param spe
-     * @param n
+     * Constructor to initialize a Doctor with profile, location, specialty, and NPI.
+     * @param pro Profile of the doctor
+     * @param loc Location of the doctor
+     * @param spe Specialty of the doctor
+     * @param n NPI of the doctor
      */
-    public Doctor(Profile pro, Location loc, Specialty spe, String n){
+    public Doctor(Profile pro, Location loc, Specialty spe, String n) {
         profile = pro;
         location = loc;
         specialty = spe;
         npi = n;
     }
 
-
     /**
-     * get specialty
-     * @return specialty
+     * Get the specialty of the doctor.
+     * @return The specialty of the doctor
      */
-    public Specialty getSpecialty(){
+    public Specialty getSpecialty() {
         return specialty;
     }
 
     /**
-     * get NPI of doctor
-     * @return npi
+     * Get the NPI of the doctor.
+     * @return The NPI of the doctor
      */
-    public String getNPI(){
+    public String getNPI() {
         return npi;
     }
-    
+
     /**
-     * get NPI of doctor in interger format
-     * @return npi interger
+     * Get the NPI of the doctor in integer format.
+     * @return The NPI in integer format
      */
-    public int getNPI_InNumber(){
+    public int getNPI_InNumber() {
         return Integer.parseInt(npi);
     }
 
     /**
-     * get Location
-     * @return Location
+     * Get the location of the doctor.
+     * @return The location of the doctor
      */
-    public Location getLocation(){
+    public Location getLocation() {
         return location;
     }
 
-    @Override public void changeCredit(int scaler){
+    /**
+     * Change the credit of the doctor.
+     * @param scaler The amount to scale the credit by
+     */
+    @Override
+    public void changeCredit(int scaler) {
         Credit += scaler * specialty.getCharge();
     }
-    @Override public int getPrice(){
+
+    /**
+     * Get the price per visit of the doctor.
+     * @return The price per visit
+     */
+    @Override
+    public int getPrice() {
         return specialty.getCharge();
     }
-    @Override public int rate() {
+
+    /**
+     * Rate the doctor.
+     * @return The rating of the doctor
+     */
+    @Override
+    public int rate() {
         return -1;
     }
-    @Override public int compareTo(Person TargetPerson){
+
+    /**
+     * Compare the current Doctor with another Person.
+     * @param TargetPerson The person to compare to
+     * @return The result of the comparison
+     */
+    @Override
+    public int compareTo(Person TargetPerson) {
         return profile.compareTo(TargetPerson.getProfile());
     }
-    @Override public boolean equals(Object other){
-        if(other.getClass() != this.getClass()){
+
+    /**
+     * Check if the current Doctor is equal to another object.
+     * @param other The object to compare with
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
             return false;
         }
-
-        Doctor TargetDoctor = (Doctor)other; 
+        Doctor TargetDoctor = (Doctor) other;
         return this.profile.equals(TargetDoctor.getProfile());
     }
-    @Override public String toString(){
+
+    /**
+     * Returns a string representation of the Doctor.
+     * @return String representation of the Doctor
+     */
+    @Override
+    public String toString() {
         return "[" + profile.toString() + ", " + location.toString() + " ] [" + specialty.toString() + " #" + npi + "]";
     }
 }

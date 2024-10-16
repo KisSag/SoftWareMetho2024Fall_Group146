@@ -1,86 +1,63 @@
 package projectone;
 
 /**
- * Last Modified: 9/29/2024
  * {@code @author:} Tianxiang Huang, Jayden Hsu
- * Test: not yet
- * 
  */
 public class Visit {
-    private Appointment appointment; //a reference to an appointment object
-    private Visit next; //a ref. to the next appointment object in the list
+    private Appointment appointment; // a reference to an appointment object
+    private Visit next; // a reference to the next appointment object in the list
 
-    //constructor
-    public Visit(){
+    // Constructor
+    /**
+     * Default constructor initializing appointment and next to null.
+     */
+    public Visit() {
         appointment = null;
         next = null;
     }
-    public Visit(Appointment app){
+
+    /**
+     * Constructor initializing Visit with an Appointment.
+     * @param app The appointment to initialize the visit with
+     */
+    public Visit(Appointment app) {
         appointment = app;
         next = null;
     }
 
-
-    public void assignNextFinishedVisit(Visit visit){
+    /**
+     * Assign the next finished visit in the linked list.
+     * @param visit The visit to assign as the next visit
+     */
+    public void assignNextFinishedVisit(Visit visit) {
         next = visit;
     }
-    
+
     /**
-     * get current appointment
-     * @return current Appointment
+     * Get current appointment.
+     * @return Current appointment
      */
-    public Appointment getCurrentAppointment(){
+    public Appointment getCurrentAppointment() {
         return appointment;
     }
 
     /**
-     * get next visit node
-     * @return next visit node
+     * Get next visit node.
+     * @return Next visit node
      */
-    public Visit getNextFinishedVisit(){
+    public Visit getNextFinishedVisit() {
         return next;
     }
-    
+
     /**
-     * get the last visit node
-     * @return last visit node
+     * Get the last visit node.
+     * @return Last visit node
      */
-    public Visit getLastedFinishedVisit(){
-        Visit VisitRunenr = this;
-        while(VisitRunenr.next != null){
-            VisitRunenr = VisitRunenr.next;
+    public Visit getLastedFinishedVisit() {
+        Visit VisitRunner = this;
+        while (VisitRunner.next != null) {
+            VisitRunner = VisitRunner.next;
         }
-        return VisitRunenr;
+        return VisitRunner;
     }
-
-    /* this is test for project 1
-    public static void main(String[] args) {
-        //Create test data for testing
-        Profile profile1 = new Profile("Huang", "Tianxiang", new Date(1, 1, 1990));
-        Profile profile2 = new Profile("Jayden", "Hsu", new Date(2, 2, 1992));
-        Appointment appointment1 = new Appointment(new Date(11, 21, 2024), Timeslot.SLOT1, profile1, Provider.PATEL);
-        Appointment appointment2 = new Appointment(new Date(12, 25, 2024), Timeslot.SLOT2, profile2, Provider.LIM);
-        Appointment appointment3 = new Appointment(new Date(1, 1, 2025), Timeslot.SLOT3, profile1, Provider.PATEL);
-
-        //Test case 1: Create a Visit with an appointment
-        Visit visit1 = new Visit(appointment1);
-        System.out.println("Test case 1: " + (visit1.getCurrentAppointment() == appointment1)); //Expected: true
-
-        //Test case 2: Create a Visit and link it to the next visit
-        Visit visit2 = new Visit(appointment2);
-        visit1.assignNextFinishedVisit(visit2);
-        System.out.println("Test case 2: " + (visit1.getNextFinishedVisit() == visit2)); //Expected: true
-
-        //Test case 3: Check the current appointment of the linked visit
-        System.out.println("Test case 3: " + visit1.getNextFinishedVisit().getCurrentAppointment().getPatient().getFirstName()); // Expected: Jayden
-
-        //Test case 4: Check if the linked list goes to the end and retrieves the last visit
-        Visit visit3 = new Visit(appointment3);
-        visit2.assignNextFinishedVisit(visit3);
-        System.out.println("Test case 4: " + (visit1.getLastedFinishedVisit() == visit3)); // Expected: true
-
-        //Test case 5: Check if the visit chain works when adding multiple visits
-        System.out.println("Test case 5: " + visit1.getLastedFinishedVisit().getCurrentAppointment().getPatient().getFirstName()); //Expected: Huang (from appointment3)
-    }
-   */
-} 
+}

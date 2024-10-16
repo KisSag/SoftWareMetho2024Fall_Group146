@@ -1,74 +1,79 @@
 package projecttwo;
 import projectone.Provider;
 
+/**
+ * {@code @author:}Tianxiang Huang
+ */
 public class TechnicianRotator {
     Technician[] TechnicianList;
     private int Rotator = 0;
 
-    public TechnicianRotator(Technician[] TechList){
+    /**
+     * Constructor to initialize TechnicianRotator with an array of Technicians.
+     * @param TechList The array of Technicians
+     */
+    public TechnicianRotator(Technician[] TechList) {
         TechnicianList = TechList;
-        if(TechnicianList.length == 0){
+        if (TechnicianList.length == 0) {
             Rotator = -1;
         }
     }
 
-    public TechnicianRotator(List<Provider> providerList){
+    /**
+     * Constructor to initialize TechnicianRotator with a list of Providers.
+     * @param providerList The list of Providers
+     */
+    public TechnicianRotator(List<Provider> providerList) {
         int count = 0;
-        for(Provider p : providerList){
-            if(p instanceof Technician){
+        for (Provider p : providerList) {
+            if (p instanceof Technician) {
                 count += 1;
             }
-      }
-
-      if(count != 0){
-        TechnicianList = new Technician[count];
-        int index = 1;
-
-        for(Provider p : providerList){
-            if(p instanceof Technician){
-                TechnicianList[TechnicianList.length - index] = (Technician)p;
-                index += 1;
+        }
+        if (count != 0) {
+            TechnicianList = new Technician[count];
+            int index = 1;
+            for (Provider p : providerList) {
+                if (p instanceof Technician) {
+                    TechnicianList[TechnicianList.length - index] = (Technician) p;
+                    index += 1;
+                }
             }
         }
-      }
-      
     }
 
     /**
-     * get Current Rotate Technician
-     * @return
+     * Get the current rotated Technician.
+     * @return The current Technician, or null if none
      */
-    public Technician getTechnician(){
-
+    public Technician getTechnician() {
         Technician target;
-        try{
+        try {
             target = TechnicianList[Rotator];
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
-
         return target;
     }
 
     /**
-     * jump to next Rotation
+     * Jump to the next rotation.
      */
-    public void jumpNext(){
-        if(Rotator == -1){
+    public void jumpNext() {
+        if (Rotator == -1) {
             return;
         }
-
         Rotator += 1;
-        if(Rotator >= TechnicianList.length){
+        if (Rotator >= TechnicianList.length) {
             Rotator = 0;
         }
     }
 
     /**
-     * get List of Technician List
-     * @return return Technician List
+     * Get the list of Technicians.
+     * @return The array of Technicians
      */
-    public Technician[] getTechnicianList(){
+    public Technician[] getTechnicianList() {
         return TechnicianList;
     }
 }

@@ -1,98 +1,123 @@
 package projectone;
 import projecttwo.Person;
 /**
- * Last Modified: 9/30/2024
  * {@code @author:} Tianxiang Huang, Jayden Hsu
- * Test: not yet
- * 
  */
-public class Patient extends Person { 
+public class Patient extends Person {
     private Visit visits;
 
-    //constructor
-    public Patient(){
+    /**
+     * Default constructor initializing profile and visits to null.
+     */
+    public Patient() {
         profile = null;
         visits = null;
     }
-    public Patient(Appointment appointment){
+
+    /**
+     * Constructor initializing a Patient from an Appointment.
+     * @param appointment The appointment to initialize the patient with
+     */
+    public Patient(Appointment appointment) {
         profile = appointment.getPatient().getProfile();
         visits = new Visit(appointment);
     }
-    public Patient(Profile pro){
+
+    /**
+     * Constructor initializing a Patient from a Profile.
+     * @param pro The profile to initialize the patient with
+     */
+    public Patient(Profile pro) {
         profile = pro;
         visits = null;
     }
+
     /**
-     * deep cp of patient
-     * @param pa
+     * Deep copy constructor for a Patient.
+     * @param pa The patient to be copied
      */
-    public Patient(Patient pa){
+    public Patient(Patient pa) {
         this.profile = new Profile(pa.getProfile());
         visits = pa.visits;
     }
-    
-    /** 
-     * iterator through the visit linklist and get all the charge
-     * @return int, as sum of all charge
+
+    /**
+     * Iterator through the visit linked list and get the total charge.
+     * @return int, as sum of all charges
      */
     public int charge() {
         Visit VisitRunner = visits;
         int FinialCharge = 0;
-
-        while(VisitRunner != null){
-            Provider provider = (Provider)VisitRunner.getCurrentAppointment().getProvider();
+        while (VisitRunner != null) {
+            Provider provider = (Provider) VisitRunner.getCurrentAppointment().getProvider();
             FinialCharge += provider.getPrice();
             VisitRunner = VisitRunner.getNextFinishedVisit();
         }
-
         return FinialCharge;
-    } //traverse the linked list to compute the charge
+    }
 
     /**
-     * input a appointment, and add the appointment as visited
-     * @param appointment
+     * Input an appointment, and add the appointment as a finished visit.
+     * @param appointment The appointment to be added as finished
      */
-    public void addFinishedAppointment(Appointment appointment){
+    public void addFinishedAppointment(Appointment appointment) {
         Visit NewFinishedVisit = new Visit(appointment);
         NewFinishedVisit.assignNextFinishedVisit(visits);
         visits = NewFinishedVisit;
     }
 
     /**
-     * get the head of node of visits linklist
-     * @return the head of node of visit
+     * Get the head node of visits linked list.
+     * @return the head node of visits
      */
-    public Visit getFirstFinihedVisit(){
+    public Visit getFirstFinihedVisit() {
         return visits;
     }
 
     /**
-     * get profile of Patient
-     * @return return the profile class
+     * Get profile of the Patient.
+     * @return the profile class
      */
-    @Override public Profile getProfile(){
+    @Override
+    public Profile getProfile() {
         return profile;
     }
-    
-    @Override public int compareTo(Person TargetPerson){
+
+    /**
+     * Compare the current Patient with another Person.
+     * @param TargetPerson The person to compare to
+     * @return result of the comparison
+     */
+    @Override
+    public int compareTo(Person TargetPerson) {
         return this.profile.compareTo(TargetPerson.getProfile());
     }
 
-    @Override public boolean equals(Object other){
-
+    /**
+     * Check if the current Patient is equal to another object.
+     * @param other The object to compare with
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
         //if not even a same class
-        if(other.getClass() != this.getClass()){
+        if (other.getClass() != this.getClass()) {
             return false;
         }
-
-        Patient TargetPatient = (Patient)other;
+        Patient TargetPatient = (Patient) other;
         return this.profile.equals(TargetPatient.getProfile());
     }
 
-    @Override public String toString(){
+    /**
+     * Returns a string representation of the Patient.
+     * @return string representation of the Patient
+     */
+    @Override
+    public String toString() {
         String result = "";
         result += profile.getFirstName() + " " + profile.getLastName() + " " + profile.getBirthDay().toString() + " ";
         //result += "[Amount due: $" + Float.toString(charge()) + "]";
         return result;
     }
 }
+

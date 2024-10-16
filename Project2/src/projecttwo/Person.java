@@ -1,33 +1,50 @@
 package projecttwo;
 import projectone.*;
 
-
-public class Person implements Comparable<Person>{
+/**
+ * {@code @author:} Tianxiang Huang
+ */
+public class Person implements Comparable<Person> {
     protected Profile profile;
 
-
-
     /**
-     * get Profile of this person
-     * @return profile of Person
+     * Get the profile of this person.
+     * @return Profile of the person
      */
-    public Profile getProfile(){
+    public Profile getProfile() {
         return profile;
     }
 
-    @Override public int compareTo(Person TargetPerson) {
+    /**
+     * Compare the current Person with another Person.
+     * @param TargetPerson The person to compare to
+     * @return Result of the comparison
+     */
+    @Override
+    public int compareTo(Person TargetPerson) {
         return profile.compareTo(TargetPerson.getProfile());
     }
-    @Override public boolean equals(Object other){
-        Person TargetProfile = (Person)other;
-        if(profile.equals(TargetProfile.getProfile())){
+
+    /**
+     * Check if the current Person is equal to another object.
+     * @param other The object to compare with
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        Person TargetProfile = (Person) other;
+        if (profile.equals(TargetProfile.getProfile())) {
             return true;
         }
         return false;
     }
-    @Override public String toString(){
+
+    /**
+     * Returns a string representation of the Person.
+     * @return String representation of the Person
+     */
+    @Override
+    public String toString() {
         return profile.toString();
     }
-
-
 }

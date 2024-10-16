@@ -1,10 +1,7 @@
 package projectone;
 
 /**
- * Last Modified: 9/29/2024
  * {@code @author:} Tianxiang Huang, Jayden Hsu
- * Test: Done
- * 
  */
 public enum Location {
     BRIDGEWATER ("Somerset", "08807"),
@@ -17,37 +14,38 @@ public enum Location {
     private final String Country; 
     private final String Zip;
 
-    Location(String Country, String Zip){
+    /**
+     * Constructor for Location enum
+     * @param Country the county of the location
+     * @param Zip the zip code of the location
+     */
+    Location(String Country, String Zip) {
         this.Country = Country;
         this.Zip = Zip;
     }
 
-    public String getCountry(){
+    /**
+     * Get the county of the location
+     * @return the county of the location
+     */
+    public String getCountry() {
         return Country;
     }
-    public String getZip(){
+
+    /**
+     * Get the zip code of the location
+     * @return the zip code of the location
+     */
+    public String getZip() {
         return Zip;
     }
 
-    @Override public String toString(){
+    /**
+     * Returns a string representation of the location
+     * @return the name of the location, followed by the county and zip code
+     */
+    @Override
+    public String toString() {
         return this.name() + ", " + Country + " " + Zip;
     }
-
-    public static void main(String[] args) {
-            //Test case 1: Verify country for BRIDGEWATER
-            System.out.println("Test case 1: " + Location.BRIDGEWATER.getCountry()); // Expected output: "Somerset"
-            
-            //Test case 2: Verify zip code for EDISON
-            System.out.println("Test case 2: " + Location.EDISON.getZip()); // Expected output: "08817"
-            
-            //Test case 3: Verify location exists and is correct (PISCATAWAY)
-            System.out.println("Test case 3: " + Location.PISCATAWAY.getCountry() + " " + Location.PISCATAWAY.getZip());//Expected output: "Middlesex 08817"
-            
-            //Test case 4: Ensure two locations with the same zip return correct results (EDISON and PISCATAWAY)
-            boolean sameZip = Location.EDISON.getZip().equals(Location.PISCATAWAY.getZip());
-            System.out.println("Test case 4: EDISON and PISCATAWAY have same zip? " + sameZip); //Expected output: true
-            
-            //Test case 5: Verify country for a different location (MORRISTOWN)
-            System.out.println("Test case 5: " + Location.MORRISTOWN.getCountry()); //Expected output: "Morris"
-        }
 }

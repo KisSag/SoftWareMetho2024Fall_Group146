@@ -1,5 +1,8 @@
 package projecttwo;
 
+/**
+ * {@code @author:} J-JHsu
+ */
 public enum Radiology {
     XRAY,  // X-ray service
     ULTRASOUND,  // Ultrasound service

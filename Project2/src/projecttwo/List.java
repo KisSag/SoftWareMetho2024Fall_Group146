@@ -2,21 +2,31 @@ package projecttwo;
 
 import java.util.Iterator;
 
-//A generic List class to manage collections of objects like Appointments or Providers.\
+/**
+ * {@code @author:} J-JHsu
+ * A generic list implementation that holds elements and allows for iteration.
+ * @param <E> the type of elements in this list
+ */
 public class List<E> implements Iterable<E> {
     private static final int INITIAL_CAPACITY = 4;
     private static final int CAPACITY_INCREMENT = 4;
-    private E[] elements; // Generic array to hold Appointments or Providers
+    private E[] elements; // Generic array to hold elements
     private int size; // Number of elements in the list
 
     // Constructor
+    /**
+     * Default constructor initializing the list with an initial capacity.
+     */
     @SuppressWarnings("unchecked")
     public List() {
         elements = (E[]) new Object[INITIAL_CAPACITY];
         size = 0;
     }
 
-    // Add method to insert elements into the list
+    /**
+     * Add an element to the list.
+     * @param e the element to be added
+     */
     public void add(E e) {
         if (contains(e)) {
             return;
@@ -24,27 +34,36 @@ public class List<E> implements Iterable<E> {
         if (size >= elements.length) {
             grow();
         }
-
         elements[size++] = e;
     }
 
-    // Remove method to delete elements from the list
+    /**
+     * Remove an element from the list.
+     * @param e the element to be removed
+     */
     public void remove(E e) {
         int index = find(e);
         if (index == -1) {
             return;
         }
-
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null; // Clear last element
     }
 
-    // Method to check if the list contains a given element
+    /**
+     * Check if the list contains a given element.
+     * @param e the element to check for
+     * @return true if the list contains the element, false otherwise
+     */
     public boolean contains(E e) {
         return find(e) != -1;
     }
 
-    // Private helper method to find the index of an element
+    /**
+     * Private helper method to find the index of an element.
+     * @param e the element to find
+     * @return the index of the element if found, -1 otherwise
+     */
     private int find(E e) {
         for (int i = 0; i < size; i++) {
             if (elements[i].equals(e)) {
@@ -54,7 +73,9 @@ public class List<E> implements Iterable<E> {
         return -1;
     }
 
-    // Private method to grow the capacity of the list
+    /**
+     * Private method to grow the capacity of the list.
+     */
     @SuppressWarnings("unchecked")
     private void grow() {
         E[] newElements = (E[]) new Object[elements.length + CAPACITY_INCREMENT];
@@ -62,7 +83,11 @@ public class List<E> implements Iterable<E> {
         elements = newElements;
     }
 
-    // Get method to retrieve elements by index
+    /**
+     * Get an element by its index.
+     * @param index the index of the element to get
+     * @return the element at the specified index, or null if out of bounds
+     */
     public E get(int index) {
         if (index < 0 || index >= size) {
             return null;
@@ -70,7 +95,11 @@ public class List<E> implements Iterable<E> {
         return elements[index];
     }
 
-    // Set method to replace element at a specific index
+    /**
+     * Replace the element at a specific index.
+     * @param index the index of the element to replace
+     * @param e the new element to set
+     */
     public void set(int index, E e) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
@@ -78,59 +107,42 @@ public class List<E> implements Iterable<E> {
         elements[index] = e;
     }
 
-    // Return the current size of the list
+    /**
+     * Get the current size of the list.
+     * @return the number of elements in the list
+     */
     public int size() {
         return size;
     }
 
-    // Return true if the list is empty
+    /**
+     * Check if the list is empty.
+     * @return true if the list is empty, false otherwise
+     */
     public boolean isEmpty() {
         return size == 0;
     }
-    
+
+    /**
+     * Return an iterator over elements of type {@code E}.
+     * @return an Iterator.
+     */
     public Iterator<E> iterator() {
         return new ListIterator();
-        //return null;
     }
-    
 
-    
     // Inner class to implement iterator
     private class ListIterator implements Iterator<E> {
         private int currentIndex = 0;
 
-        @Override public boolean hasNext() {
+        @Override
+        public boolean hasNext() {
             return currentIndex < size;
         }
 
-        @Override public E next() {
+        @Override
+        public E next() {
             return elements[currentIndex++];
         }
     }
-    
-    
-    /* doesn't matter I guess, similar function can be achieved in ClinicManager.class
-    // Rotate a circular list of technicians for assigning imaging appointments.
-    public E getNextTechnician() {
-        E technician = elements[0]; // Circular rotation logic here
-        // Move the first technician to the end of the list
-        remove(technician);
-        add(technician);
-        return technician;
-    }
-    */
-    /*
-    public static void main(String [] args) {
-
-        List<Integer> testINT = new List<Integer>();
-
-        Random rand = new Random();
-
-        for(int i = 0; i < 99; i += 1){
-            testINT.add(rand.nextInt(1000));
-        }
-
-        System.out.println(testINT.get(1));
-    }
-    */
 }

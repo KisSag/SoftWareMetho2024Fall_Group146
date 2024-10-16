@@ -1,83 +1,98 @@
 package projecttwo;
 
-public class Timeslot implements Comparable<Timeslot>{
+/**
+ * {@code @author:} Tianxiang Huang
+ */
+public class Timeslot implements Comparable<Timeslot> {
     private int hour;
-    private int minuts;
+    private int minutes;
 
     /**
-     * constructor
-     * @param h
-     * @param m
+     * Constructor to initialize the Timeslot.
+     * @param h The hour
+     * @param m The minutes
      */
-    public Timeslot(int h, int m){
+    public Timeslot(int h, int m) {
         hour = h;
-        minuts = m;
+        minutes = m;
     }
-    
+
     /**
-     * deep cp constructor
-     * @param ti
+     * Deep copy constructor.
+     * @param ti The Timeslot to copy
      */
-    public Timeslot(Timeslot ti){
+    public Timeslot(Timeslot ti) {
         hour = ti.getHour();
-        minuts = ti.getMinuts();
+        minutes = ti.getMinutes();
     }
 
-
     /**
-     * get hour
-     * @return hour
+     * Get the hour of the timeslot.
+     * @return The hour
      */
-    public int getHour(){
+    public int getHour() {
         return hour;
     }
 
     /**
-     * get minuts
-     * @return minuts
+     * Get the minutes of the timeslot.
+     * @return The minutes
      */
-    public int getMinuts(){
-        return minuts;
+    public int getMinutes() {
+        return minutes;
     }
 
-    @Override public String toString(){
-        String result = Integer.toString(hour) + ":" + Integer.toString(minuts);
-        if(hour >= 12){
+    /**
+     * Returns a string representation of the Timeslot.
+     * @return String representation of the Timeslot
+     */
+    @Override
+    public String toString() {
+        String result = Integer.toString(hour) + ":" + Integer.toString(minutes);
+        if (hour >= 12) {
             result += " PM";
-        }else{
+        } else {
             result += " AM";
         }
         return result;
     }
-    @Override public boolean equals(Object other){
-        if(other.getClass() != this.getClass()){
+
+    /**
+     * Check if the current Timeslot is equal to another object.
+     * @param other The object to compare with
+     * @return true if equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other.getClass() != this.getClass()) {
             return false;
         }
-
-        Timeslot TargetTimeSlot = (Timeslot)other;
-
-        if(TargetTimeSlot.getHour() == hour && TargetTimeSlot.getMinuts() == minuts){
+        Timeslot TargetTimeSlot = (Timeslot) other;
+        if (TargetTimeSlot.getHour() == hour && TargetTimeSlot.getMinutes() == minutes) {
             return true;
         }
-
         return false;
     }
-    @Override public int compareTo(Timeslot TargetTimeSlot) {
 
-        //check hour
-        if(hour < TargetTimeSlot.getHour()){
+    /**
+     * Compare the current Timeslot with another Timeslot.
+     * @param TargetTimeSlot The Timeslot to compare to
+     * @return The result of the comparison
+     */
+    @Override
+    public int compareTo(Timeslot TargetTimeSlot) {
+        // Check hour
+        if (hour < TargetTimeSlot.getHour()) {
             return -1;
-        }else if(hour > TargetTimeSlot.getHour()){
+        } else if (hour > TargetTimeSlot.getHour()) {
             return 1;
         }
-
-        //check minuts
-        if(minuts < TargetTimeSlot.getMinuts()){
+        // Check minutes
+        if (minutes < TargetTimeSlot.getMinutes()) {
             return -1;
-        }else if(minuts > TargetTimeSlot.getMinuts()){
+        } else if (minutes > TargetTimeSlot.getMinutes()) {
             return 1;
         }
-
         return 0;
     }
 }
