@@ -5,8 +5,16 @@ import projectone.Location;
 import projectone.Provider;
 
 /**
+ * The Sort class provides sorting utilities for appointments and persons.
+ * It supports sorting appointments based on date, location, or patient, and 
+ * persons based on their profile using the bubble sort algorithm.
+ * 
+ * The sorting is controlled by a key that determines the sorting criteria 
+ * for appointments, and by profile attributes for persons.
+ * 
  * {@code @author:} J-JHsu, Tianxiang Huang
  */
+
 public class Sort {
 
     /**

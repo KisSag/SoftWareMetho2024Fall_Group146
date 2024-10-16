@@ -1,8 +1,15 @@
 package projecttwo;
 
 /**
+ * The Timeslot class represents a specific time of day, defined by an hour and minutes.
+ * Supports basic operations like comparing two timeslots, checking equality, and generating a string representation.
+ * This class implements Comparable to allow timeslots to be sorted or compared based on their time values.
+ * 
+ * There is also a deep copy constructor for creating a new Timeslot with the same values as an existing one.
+ * 
  * {@code @author:} Tianxiang Huang
  */
+
 public class Timeslot implements Comparable<Timeslot> {
     private int hour;
     private int minutes;

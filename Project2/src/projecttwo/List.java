@@ -7,6 +7,7 @@ import java.util.Iterator;
  * A generic list implementation that holds elements and allows for iteration.
  * @param <E> the type of elements in this list
  */
+
 public class List<E> implements Iterable<E> {
     private static final int INITIAL_CAPACITY = 4;
     private static final int CAPACITY_INCREMENT = 4;
