@@ -8,16 +8,14 @@ import java.util.Scanner; // Import the Scanner class to read text files
 ///////////////////////////////////////////////
 
 import java.util.Calendar;
-/**
- *  {@code @author:} Tianxiang Huang
- */
+
 public class ClinicManager {
 
     private List<Provider> providerList = new List<Provider>();
-    private List<Appointment> AppointmentList = new List<Appointment>();
+    private List<Appointment> appointmentList = new List<Appointment>();
     private TechnicianRotator technicianRotator;
     private static MedicalRecord medicalRecord = new MedicalRecord();
-    private boolean ProgrammeRunner = true;
+    private boolean programmeRunner = true;
 
     /**
      * Main Loop of the programme
@@ -29,7 +27,7 @@ public class ClinicManager {
       
       Scanner CommandScanner = new Scanner(System.in);
         System.out.println("\nClinic Manager is running.");
-        while(ProgrammeRunner){
+        while(programmeRunner){
             readCommand(CommandScanner.nextLine());
         }
 
@@ -50,17 +48,14 @@ public class ClinicManager {
 
       switch (Command_Seped[0]) {
         case "D":scheduleAppointment_Doctor(CommandLine);break;
-        case "Q":ProgrammeRunner = false;break;
+        case "Q":programmeRunner = false;break;
         case "T":scheduleAppointment_Imaging(CommandLine);break;
         case "C":cancelAppointment(CommandLine);break;
         case "R":rescheduleAppointment(CommandLine);break;
-        case "PA":displayAppointment_Sorted_Date(); break;
-        case "PP":displayAppointment_Sorted_Patient(); break;
-        case "PL":displayAppointment_Sorted_Location(); break;
         case "PC":printProviderCredit();break;
         case "PS":calculateBill();break;
-        case "PI":displayAppointment_Imaging(); break;
-        case "PO":displayAppointment_Office(); break;
+        case "PI": displayAppointment_Imaging(); break;
+        case "PO": displayAppointment_Office(); break;
         default:System.out.println("Invalid Command");break;
       }
 
@@ -184,7 +179,7 @@ public class ClinicManager {
         System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment does not exist.");
         return;
       }
-      AppointmentList.remove(TargetAppontment);
+      appointmentList.remove(TargetAppontment);
       Provider provider = (Provider)TargetAppontment.getProvider();
       provider.changeCredit(-1);
       System.out.println(CommandLine_Sp[1] + " " + timeslot.toString() + " " + patient.toString() + " - appointment has been canceled.");
@@ -225,7 +220,7 @@ public class ClinicManager {
       Appointment modifiedAppointment = new Appointment(TargetAppontment.getDate(), timeslot_new, TargetAppontment.getPatient(), TargetAppontment.getProvider());
       //cancel old appointment
       Appointment finalcheckAppointment = scheduleAppointment_finalCheck(modifiedAppointment);
-      if(finalcheckAppointment != null){AppointmentList.remove(TargetAppontment); Provider pro = (Provider)TargetAppontment.getProvider(); pro.changeCredit(-1); System.out.println("Rescheduled to " + finalcheckAppointment.toString());}
+      if(finalcheckAppointment != null){appointmentList.remove(TargetAppontment); Provider pro = (Provider)TargetAppontment.getProvider(); pro.changeCredit(-1); System.out.println("Rescheduled to " + finalcheckAppointment.toString());}
     }
 
     /**
@@ -233,79 +228,59 @@ public class ClinicManager {
      */
     void printProviderCredit(){
       System.out.println("** Credit amount ordered by provider. **");
-      int providerIndex = 1;
-
-      List<Person> PersonList = new List<Person>();
+      int providerIndex = 0;
       for(Provider pro : providerList){
-        PersonList.add(pro);
-      }
-      Sort.Person(PersonList);
-
-      for(Person per : PersonList){
-        Provider pro = (Provider)per;
         String output = "(" + Integer.toString(providerIndex) + ") " + pro.getProfile().toString() + " [Credit amount: $" + Integer.toString(pro.getCredit()) + ".00]";
         System.out.println(output);
         providerIndex += 1;
       }
-      System.out.println("** end of list **\n");
+      System.out.println("** end of list **");
     }
 
     /**
      * calculate all the bill for patient and remove ALL appointment
      */
     void calculateBill(){
-        if(AppointmentList.size() != 0){medicalRecord.add(AppointmentList);}
-        Patient[] PatientList = medicalRecord.getPatientsList();
-        if(PatientList == null || PatientList.length == 0){System.out.println("No Medical Record");return;}
+      if(appointmentList.size() != 0){
+        medicalRecord.add(appointmentList);
+      }
 
-        List<Person> PersonList = new List<Person>();
-        for(int i = 0; i < PatientList.length; i += 1){
-          if(PatientList[i] != null){
-            PersonList.add(PatientList[i]);
-          }
+      Patient[] PatientList = medicalRecord.getPatientsList();
+
+        if(PatientList == null || PatientList.length == 0){
+            System.out.println("No Medical Record");
+            return;
         }
-        Sort.Person(PersonList);
+
         System.out.println("** Billing statement **");
-        int index = 1;
-        for(Person per : PersonList){
-          Patient pa = (Patient)per;
-          for(int i = 0; i < PatientList.length; i += 1){
+        for(int i = 0; i < PatientList.length; i += 1){
             if(PatientList[i] == null){
-              continue;
+                continue;
             }
-
-            if(pa.equals(PatientList[i])){
-              System.out.println("(" +Integer.toString(index) +  ") " + PatientList[i].toString() + " [due: $" + PatientList[i].charge() + ".00]");
-              index += 1;
-            }
-          }
+        System.out.println("(" +Integer.toString(i + 1) +  ") " + PatientList[i].toString() + " [due: $" + PatientList[i].charge() + ".00]");
+            
         }
-
         System.out.println("** End of List **");
-        AppointmentList = new List<Appointment>();
+        appointmentList = new List<Appointment>();
     }
     
     /**
      * display the imaging appointment
      */
     void displayAppointment_Imaging(){
-      List<Appointment> Appointment_Filted = new List<Appointment>();
-      for(Appointment app : AppointmentList){
+      List<Imaging> Appointment_Filted = new List<Imaging>();
+      for(Appointment app : appointmentList){
         if(app instanceof Imaging){
-          Appointment_Filted.add(app);
+          Appointment_Filted.add((Imaging)app);
         }
       }
-      if(Appointment_Filted.size() == 0){
-        System.out.println("Radiology Schedule is empty.");
-        return;
-      }
-      Sort.appointment(Appointment_Filted, 'L');
+
 
       System.out.println("** List of radiology appointments ordered by county/date/time. **");
-      for(Appointment ima : Appointment_Filted){
+      for(Imaging ima : Appointment_Filted){
         System.out.println(ima.toString());
       }
-      System.out.println("** end of list **\n");
+      System.out.println("** end of list **");
 
       
     }
@@ -315,80 +290,26 @@ public class ClinicManager {
      */
     void displayAppointment_Office(){
       List<Appointment> Appointment_Filted = new List<Appointment>();
-      for(Appointment app : AppointmentList){
+      for(Appointment app : appointmentList){
         if(!(app instanceof Imaging)){
           Appointment_Filted.add(app);
         }
       }
-      if(Appointment_Filted.size() == 0){
-        System.out.println("Office Schedule is empty.");
-        return;
-      }
-      Sort.appointment(Appointment_Filted, 'L');
+
 
       System.out.println("** List of office appointments ordered by county/date/time. **");
       for(Appointment app : Appointment_Filted){
         System.out.println(app.toString());
       }
-      System.out.println("** end of list **\n");
+      System.out.println("** end of list **");
     }
     
     /**
-     * sort appointment by date
-     */
-    void displayAppointment_Sorted_Date(){
-      if(AppointmentList.size() == 0){
-        System.out.println("Schedule Calendar is empty.");
-        return;
-      }
-      System.out.println("** List of appointments, ordered by date/time/provider. **");
-      Sort.appointment(AppointmentList, 'D');
-      displayALLAppointment();
-      System.out.println("** end of list **\n");
-    }
-
-    /**
-     * sort appointment by patient
-     */
-    void displayAppointment_Sorted_Patient(){
-      if(AppointmentList.size() == 0){
-        System.out.println("Schedule Calendar is empty.");
-        return;
-      }
-      System.out.println("** List of appointments, ordered by patient/date/time. **");
-      Sort.appointment(AppointmentList, 'P');
-      displayALLAppointment();
-      System.out.println("** end of list **\n");
-    }
-
-    /**
-     * sort appointment by Location
-     */
-    void displayAppointment_Sorted_Location(){
-      if(AppointmentList.size() == 0){
-        System.out.println("Schedule Calendar is empty.");
-        return;
-      }
-      System.out.println("** List of appointments, ordered by county/date/time. **");
-      Sort.appointment(AppointmentList, 'L');
-      displayALLAppointment();
-      System.out.println("** end of list **\n");
-    }
-
-    /**
-     * simply print all appointment from list
-     */
-    private void displayALLAppointment(){
-      for(Appointment app : AppointmentList){
-        System.out.println(app.toString());
-      }
-    }
-
-    /**
      * finale check if an appointment is able to add into appointment List.
      * @param appointment
+     * @return the appointment if it passes the check, null otherwise
      */
-    private Appointment scheduleAppointment_finalCheck(Appointment appointment){
+    Appointment scheduleAppointment_finalCheck(Appointment appointment){
 
       //check if date is valid in calendar
       if(!checkvalidAppointmentDate_Calendar(appointment.getDate())){
@@ -400,7 +321,7 @@ public class ClinicManager {
         return null;
       }
 
-      AppointmentList.add(appointment);
+      appointmentList.add(appointment);
       
       //change potential credit for provider
       Provider provider = (Provider)appointment.getProvider();
@@ -460,7 +381,7 @@ public class ClinicManager {
      */
     private boolean checkvalidAppointment_Conflict(Appointment TargetApp){
 
-      for (Appointment app : AppointmentList) {
+      for (Appointment app : appointmentList) {
         if(app.checkAppointmentConflict_Provider(TargetApp)){
           System.out.println(TargetApp.toString() + " is conflict");
           return false;
@@ -735,7 +656,7 @@ public class ClinicManager {
      * @param YearOffset
      * @return the Date with offset, that use system date as pivot 
      */
-    private Date getSystemDate(int MonthOffset, int DayOffset, int YearOffset){
+    public Date getSystemDate(int MonthOffset, int DayOffset, int YearOffset){
       int INDEX_OFFSET = 1;
 
       Calendar calndr = Calendar.getInstance();
@@ -804,7 +725,7 @@ public class ClinicManager {
      * @return return true if technician is valid, return false else
      */
     private boolean checkTechnicianValid(Date date, Timeslot timeslot, Technician tech, Radiology rad){
-      for (Appointment appointment : AppointmentList) {
+      for (Appointment appointment : appointmentList) {
         if(appointment instanceof Imaging){
           Imaging imag_app = (Imaging)appointment;
           if(imag_app.checkAppointmentConflict(date, timeslot, tech, rad)){
@@ -823,11 +744,30 @@ public class ClinicManager {
      * @return return appointment class if founded, return null else.
      */
     private Appointment findAppointment(Patient pa, Date da, Timeslot ts){
-      for(Appointment app : AppointmentList){
+      for(Appointment app : appointmentList){
         if(app.findAppointment(pa, da, ts)){
           return app;
         }
       }
       return null;
     }
+
+
+    /*
+    public static void main(String[] args){
+      Date da = new Date(10, 16, 2001);
+      Patient pa1 = new Patient(new Profile("Tianxiang", "Huang", da));
+
+      readProvider_FromFile();
+
+      Person Foolish = providerList.get(0);
+
+      System.out.println(Foolish.getClass());
+
+    /*
+      Appointment app1 = new Appointment(da, generateTimeSlot_ByIndex(Integer.toString(2)), pa1, providerList.get(2));
+      System.out.println(app1.toString());
+    */
+  //}
+  
 }
