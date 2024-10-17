@@ -4,6 +4,10 @@ import projectone.*;
 
 /**
  * {@code @author:} Tianxiang Huang
+ * The Technician class represents a technician in the clinic system who provides services.
+ * It extends the Provider class and provides methods to retrieve the technician's rate, adjust credits,
+ * compare with other persons, and check equality.
+ * The class overrides methods from the Provider class and implements custom behavior for technicians.
  */
 public class Technician extends Provider {
     private int ratePerVisit;

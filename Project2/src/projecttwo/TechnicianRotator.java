@@ -3,6 +3,10 @@ import projectone.Provider;
 
 /**
  * {@code @author:}Tianxiang Huang
+ * The TechnicianRotator class manages the rotation of technicians.
+ * It supports initializing with an array or list of technicians, retrieving the current technician,
+ * and moving to the next technician in the rotation.
+ * It also provides methods to access the list of technicians and handles edge cases, such as empty lists.
  */
 public class TechnicianRotator {
     Technician[] TechnicianList;

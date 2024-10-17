@@ -3,6 +3,10 @@ import projectone.*;
 
 /**
  * {@code @author:} Tianxiang Huang
+ * The Person class represents a general person in the clinic system.
+ * The class provides methods for accessing the person's profile, comparing Person objects,
+ * checking equality, and generating a string representation of the person.
+ *
  */
 public class Person implements Comparable<Person> {
     protected Profile profile;
