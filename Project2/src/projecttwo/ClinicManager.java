@@ -8,9 +8,16 @@ import java.util.Scanner; // Import the Scanner class to read text files
 ///////////////////////////////////////////////
 
 import java.util.Calendar;
+
 /**
- *  {@code @author:} Tianxiang Huang
+ * The ClinicManager class is responsible for managing the scheduling of appointments
+ * for doctors and imaging services. It processes commands from the user to schedule, reschedule, 
+ * and cancel appointments, as well as display appointment and billing information. 
+ * It uses provider and patient information and ensures that scheduling conflicts are handled.
+ * 
+ * {@code @author:} Huang Tianxiang
  */
+
 public class ClinicManager {
 
     private List<Provider> providerList = new List<Provider>();
