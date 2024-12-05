@@ -2,11 +2,15 @@ package projecttwo;
 import projectone.*;
 
 /**
+ * The Doctor class represents a doctor as a porvider in the clinic system
+ * It includes the doctor's specialty, NPI, and location
+ * 
  * {@code @author:} Tianxiang Huang
  * The Doctor class represents a doctor as a porvider in the clinic system
  * It includes the doctor's specialty, NPI, and location
  *
  */
+
 public class Doctor extends Provider {
     private Specialty specialty;
     private String npi;
