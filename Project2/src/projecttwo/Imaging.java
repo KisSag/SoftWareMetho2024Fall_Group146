@@ -2,12 +2,18 @@ package projecttwo;
 import projectone.*;
 
 /**
+ * The Imaging class represents an imaging appointment in the clinic system.
+ * It extends the Appointment class, adding specific details about the type of radiology room  used for the appointment.
+ * This class includes methods for checking appointment conflicts based on the technician, date, timeslot, and radiology room, 
+ * as well as overriding methods for comparison and string representation.
+ * 
  * {@code @author:} Jayden Hsu
  * The Imaging class represents an imaging appointment in the clinic system.
  * It extends the Appointment class, adding specific details about the type of radiology room  used for the appointment.
  * This class includes methods for checking appointment conflicts based on the technician, date, timeslot, and radiology room,
  * as well as overriding methods for comparison and string representation.
  */
+
 public class Imaging extends Appointment {
     private Radiology room; // CATSCAN, ULTRASOUND, XRAY
 
